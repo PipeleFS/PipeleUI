@@ -1,61 +1,82 @@
-<script context="module">
-	export const prerender = true;
-</script>
-
 <script>
-	import Counter from '$lib/Counter.svelte';
+    import { onMount } from "svelte";
+
+    import { ethers } from "ethers";
+    import Web3Modal from "web3modal";
+    import WalletConnectProvider from "@walletconnect/web3-provider";
+
+
+    const providerOptions = {
+        walletconnect: {
+            package: WalletConnectProvider,
+            options: {
+                infuraId: import.meta.env.CLIENT_INFURA_ID
+            }
+        }
+    };
+
+    const web3Modal = new Web3Modal({
+        network: "mainnet",
+        cacheProvider: true,
+        providerOptions
+    });
+
+
+    let instance, provider, signer;
+    let isConnected = false;
+
+
+    onMount(() => {
+        const cachedProviderName = JSON.parse(localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER"));
+        if (cachedProviderName) {
+            connect();
+        }
+    })
+
+    async function connect() {
+        instance = await web3Modal.connect()
+        provider = new ethers.providers.Web3Provider(instance)
+        signer = provider.getSigner();
+
+        isConnected = true;
+
+        provider.on("accountsChanged", (accounts) => {
+            console.log('accounts', accounts);
+        });
+
+        provider.on("chainChanged", (chainId) => {
+            console.log('changed', chainId);
+        });
+
+        provider.on("connect", (info) => {
+            console.log('connected', info);
+            isConnected = true;
+        });
+
+        provider.on("disconnect", (error) => {
+            console.log('Error', error);
+            isConnected = false;
+        });
+    }
+
+    async function disconnect() {
+        await web3Modal.clearCachedProvider();
+        isConnected = false;
+    }
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
 
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset="svelte-welcome.webp" type="image/webp" />
-				<img src="svelte-welcome.png" alt="Welcome" />
-			</picture>
-		</span>
+{#if (!isConnected)}
+    <section id="intro">
+        <h1>Pipele</h1>
+        <p>Creation of private space and data sharing products.</p>
+        <button on:click={connect}>Connect</button>
+    </section>
+{/if}
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/index.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 1;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
-</style>
+{#if (isConnected)}
+    <section id="content">
+        content
+        <button on:click={disconnect}>Disconnect</button>
+    </section>
+{/if}
