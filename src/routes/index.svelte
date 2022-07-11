@@ -1,6 +1,8 @@
 <script>
     import { onMount } from "svelte";
 
+    import Upload from "../lib/Upload.svelte";
+
     import { ethers } from "ethers";
     import Web3Modal from "web3modal";
     import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -77,6 +79,7 @@
 {#if (isConnected)}
     <section id="content">
         content
+        <Upload buttonLabel="Upload" showButton="true" encrypt="true" />
         <button on:click={disconnect}>Disconnect</button>
     </section>
 {/if}
