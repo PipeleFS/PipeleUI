@@ -1,11 +1,16 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, setContext } from "svelte";
 
     import Upload from "../lib/Upload.svelte";
+    import FileList from "../lib/FileList.svelte";
 
     import { ethers } from "ethers";
     import Web3Modal from "web3modal";
     import WalletConnectProvider from "@walletconnect/web3-provider";
+
+    import { Users, UserStorage } from '@spacehq/sdk';
+
+    import { CONTEXT_KEY } from '$lib/constants';
 
 
     const providerOptions = {
@@ -27,8 +32,37 @@
     let instance, provider, signer;
     let isConnected = false;
 
+    let identity, user, storage;
 
-    onMount(() => {
+    const users = new Users({endpoint: 'wss://auth-dev.space.storage'});
+
+    console.log(users)
+
+
+    users.createIdentity()
+        .then(async result => {
+            identity = result;
+            user = await users.authenticate(identity);
+
+            console.log('promise', user)
+
+            storage = new UserStorage(user);
+
+            console.log('states', identity, user, storage)
+        })
+        .catch(error => console.log(error));
+
+
+    setContext(CONTEXT_KEY, {
+        getProvider: () => provider,
+        getSigner: () => signer,
+
+        getIdentity: () => identity,
+        getUser: () => user,
+        getStorage: () => storage
+    });
+
+    onMount(async () => {
         const cachedProviderName = JSON.parse(localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER"));
         if (cachedProviderName) {
             connect();
@@ -78,7 +112,7 @@
 
 {#if (isConnected)}
     <section id="content">
-        content
+        <FileList />
         <Upload buttonLabel="Upload" showButton="true" encrypt="true" />
         <button on:click={disconnect}>Disconnect</button>
     </section>

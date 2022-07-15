@@ -4,6 +4,7 @@
 */
 
 import { Web3Storage } from 'web3.storage';
+import fleekStorage from '@fleekhq/fleek-storage-js';
 
 
 export async function uploadWeb3Json(name, data) {
@@ -23,4 +24,40 @@ export async function uploadWeb3File(file, onStoredChunk) {
 
     console.log('stored files with cid:', file, cid);
     return cid;
+}
+
+export async function uploadFleekFile(file) {
+    const uploadedFile  = await fleekStorage.upload({
+        apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
+        apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
+        key: file.name,
+        //bucket: 'something',
+        ContentType: file.type,
+        data: file,
+        httpUploadProgressCallback: (event) => {
+            console.log(Math.round(event.loaded / event.total * 100) + '% done');
+        }
+    });
+
+    const buckets = await fleekStorage.listBuckets({
+        apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
+        apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
+    });
+
+    console.log('upload', uploadedFile, buckets);
+
+    return uploadedFile.hash;
+}
+
+export async function listFleekFile() {
+    return await fleekStorage.listFiles({
+        apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
+        apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
+        getOptions: [
+            'bucket',
+            'key',
+            //'hash',
+            'publicUrl'
+        ],
+    })
 }

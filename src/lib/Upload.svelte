@@ -4,7 +4,7 @@
 -->
 
 <script>
-    import { uploadWeb3File } from "./storage.js";
+    import { uploadFleekFile } from "./storage.js";
     import {encryptFile } from "./encrypt.js";
     import Progress from './Progress.svelte';
 
@@ -76,7 +76,7 @@
             file = await encryptFile(file);
         }
 
-        const cid = await uploadWeb3File(file, onStoredChunk);
+        const cid = await uploadFleekFile(file, onStoredChunk);
         const url = `https://ipfs.io/ipfs/${cid}`;
 
         if (!showButton) {
