@@ -26,12 +26,26 @@ export async function uploadWeb3File(file, onStoredChunk) {
     return cid;
 }
 
+export async function uploadFleekText(fileName, data, mimeType) {
+    const uploadedFile  = await fleekStorage.upload({
+        apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
+        apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
+        key: fileName,
+        ContentType: mimeType,
+        data: data,
+        httpUploadProgressCallback: (event) => {
+            console.log(Math.round(event.loaded / event.total * 100) + '% done');
+        }
+    });
+
+    return uploadedFile.hash;
+}
+
 export async function uploadFleekFile(file) {
     const uploadedFile  = await fleekStorage.upload({
         apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
         apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
         key: file.name,
-        //bucket: 'something',
         ContentType: file.type,
         data: file,
         httpUploadProgressCallback: (event) => {
@@ -39,14 +53,15 @@ export async function uploadFleekFile(file) {
         }
     });
 
-    const buckets = await fleekStorage.listBuckets({
-        apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
-        apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
-    });
-
-    console.log('upload', uploadedFile, buckets);
-
     return uploadedFile.hash;
+}
+
+/*
+    Path without closing slash '/', fileName without slash
+ */
+export async function createFleekFolder(path, fileName, data, mimeType) {
+    const filePath = `${path}/${fileName}`;
+    return uploadFleekText(filePath, data, mimeType);
 }
 
 export async function listFleekFile() {

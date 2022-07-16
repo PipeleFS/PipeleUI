@@ -15,7 +15,15 @@ export default {
 		})
 	],
 
+	define: {
+		'process.env.NODE_DEBUG': 'false',
+		'global': 'globalThis'
+	},
+
 	build: {
+		target: 'esnext',
+		minify: false,
+
 		rollupOptions: {
 			plugins: [
 				// ↓ Needed for build

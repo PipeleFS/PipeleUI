@@ -2,6 +2,9 @@
 	"name": "pipele",
 	"version": "0.0.1",
 	"type": "module",
+	"engines": {
+		"node": ">=16.9"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
@@ -33,6 +36,8 @@
 	"dependencies": {
 		"@fleekhq/fleek-storage-js": "^1.0.21",
 		"@spacehq/sdk": "^0.0.30",
+		"@sveltejs/adapter-static": "^1.0.0-next.37",
+		"@tableland/sdk": "^2.0.2",
 		"@walletconnect/web3-provider": "^1.7.8",
 		"@web3auth/web3auth": "^1.1.0",
 		"cookie": "^0.4.1",
