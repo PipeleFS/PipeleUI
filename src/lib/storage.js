@@ -69,10 +69,12 @@ export async function listFleekFile() {
         apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
         apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
         getOptions: [
-            'bucket',
             'key',
-            //'hash',
             'publicUrl'
         ],
     })
+}
+
+export async function deleteFleekFile() {
+
 }

@@ -4,7 +4,7 @@ import LitJsSdk from 'lit-js-sdk';
 const accessControlConditions = [{
         contractAddress: '',
         standardContractType: '',
-        chain: 'ethereum',
+        chain: 'goerli',
         method: 'eth_getBalance',
         parameters: [':userAddress', 'latest'],
         returnValueTest: {
@@ -18,7 +18,7 @@ export async function encryptFile(file) {
     await client.connect();
     window.litNodeClient = client;
 
-    const chain = 'rinkeby';
+    const chain = 'goerli';
     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
     // < 20MB  -- encryptFile()
@@ -39,7 +39,7 @@ export async function encryptFile(file) {
 
 
 document.addEventListener('lit-ready', function (e) {
-    console.log('LIT network is ready')
+    console.log('LIT network is ready', e)
     // replace this line with your own code that tells your app the network is ready
 }, { once: true });
 

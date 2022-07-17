@@ -1,5 +1,5 @@
 <script>
-    import { onMount, setContext } from "svelte";
+    import { onMount } from "svelte";
 
     import Upload from "$lib/Upload.svelte";
     import FileList from "$lib/FileList.svelte";
@@ -8,11 +8,14 @@
     import Web3Modal from "web3modal";
     import WalletConnectProvider from "@walletconnect/web3-provider";
 
+    import Download from "$lib/Download.svelte";
+    import Share from "$lib/Share.svelte";
+
     import { connect as tlConnect } from '@tableland/sdk';
 
-    import { CONTEXT_KEY, USER_TABLE_NAME } from '$lib/constants';
-    import { createFleekFolder } from '$lib/storage';
-    import { rootFolder } from "$lib/stores";
+    import { USER_TABLE_NAME } from '$lib/constants';
+    import { createFleekFolder, deleteFleekFile } from '$lib/storage';
+    import { rootFolder, signer } from "$lib/stores";
 
 
     const providerOptions = {
@@ -25,23 +28,19 @@
     };
 
     const web3Modal = new Web3Modal({
-        network: "mainnet",
+        network: "testnet",
         cacheProvider: true,
         providerOptions
     });
 
 
-    let instance, provider, signer;
+    let instance, provider;
     let isConnected = false;
 
     let tableland;
 
+    let hasSelection = false;
 
-    setContext(CONTEXT_KEY, {
-        getProvider: () => provider,
-        getSigner: () => signer,
-
-    });
 
     onMount(async () => {
         const cachedProviderName = JSON.parse(localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER"));
@@ -53,7 +52,7 @@
     async function connect() {
         instance = await web3Modal.connect()
         provider = new ethers.providers.Web3Provider(instance)
-        signer = provider.getSigner();
+        $signer = provider.getSigner();
 
         isConnected = true;
         initApp();
@@ -84,7 +83,8 @@
 
     async function initApp() {
         tableland = await tlConnect({
-            network: "testnet"
+            network: "testnet",
+            chain: "ethereum-goerli"
         });
 
         $rootFolder = await getRootFolderId();
@@ -95,25 +95,32 @@
         let dataTable = tables.find(table => table.name.startsWith(USER_TABLE_NAME))?.name;
         console.log('connect', tables, dataTable);
 
-        if (dataTable === undefined) {
-            { name } await tableland.create(
-                `root_folder text`,
-                USER_TABLE_NAME
-            );
+        if (dataTable !== undefined) {
+            // const { name } = await tableland.create(
+            //     `root_folder text`,
+            //     USER_TABLE_NAME
+            // );
 
-            dataTable = name;
+            dataTable = 'pip_user_5_83';
 
-            const rootFolder = await createFleekFolder(`/${await signer.getAddress()}`, 'root.txt', 'empty', 'text/plain');
+            const rootFolder = await createFleekFolder(`/${await $signer.getAddress()}`, 'root.txt', 'empty', 'text/plain');
+
             const insertRes = await tableland.write(
                 `INSERT INTO ${dataTable} (root_folder) VALUES (${rootFolder});`
             );
-            console.log(insertRes);
+            console.log('root', insertRes, rootFolder);
         }
 
         const { columns, rows } = await tableland.read(`SELECT * FROM ${dataTable};`);
         console.log('table', columns, rows);
 
-        return dataTable;
+        return rootFolder;
+    }
+
+    function handleUploadComplete(url, fileName, fileType, cid) {
+        console.log('complete', cid);
+
+
     }
 </script>
 
@@ -128,11 +135,20 @@
 
 {#if (isConnected)}
     <section id="content">
-        <FileList />
+        <FileList bind:hasSelection />
 
         <!-- To get a first working implementation fast, this directly opens a file select dialog
              Dedicated dialog will be implemented during 2nd step app completion -->
-        <Upload buttonLabel="Upload" showButton="true" encrypt="true" />
-        <button on:click={disconnect}>Disconnect</button>
+        <div>
+            <Upload buttonLabel="Upload" showButton="true" encrypt="true" postFileCallback="{handleUploadComplete}"/>
+            <Share disabled="{hasSelection !== true}"/>
+            <Download disabled="{hasSelection !== true}"/>
+        </div>
+        <div>
+            <button on:click={deleteFleekFile} disabled="{hasSelection === false}">Delete</button>
+        </div>
+        <div>
+            <button on:click={disconnect}>Disconnect</button>
+        </div>
     </section>
 {/if}

@@ -86,7 +86,7 @@
         uploadElement.value = '';
 
         isUploading = false;
-        postFileCallback(url, file.name, file.type);
+        postFileCallback(url, file.name, file.type, cid);
     }
 </script>
 
