@@ -64,15 +64,23 @@ export async function createFleekFolder(path, fileName, data, mimeType) {
     return uploadFleekText(filePath, data, mimeType);
 }
 
-export async function listFleekFile() {
-    return await fleekStorage.listFiles({
-        apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
-        apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
-        getOptions: [
-            'key',
-            'publicUrl'
-        ],
-    })
+export async function listFleekFiles(listPrefix) {
+    console.log('prefix', listPrefix);
+
+    if (listPrefix) {
+        return await fleekStorage.listFiles({
+            apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
+            apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
+            prefix: listPrefix,
+            getOptions: [
+                'key',
+                //'hash',
+                'publicUrl'
+            ],
+        });
+    } else {
+        return []
+    }
 }
 
 export async function deleteFleekFile() {

@@ -16,6 +16,7 @@
     import { USER_TABLE_NAME } from '$lib/constants';
     import { createFleekFolder, deleteFleekFile } from '$lib/storage';
     import { rootFolder, signer } from "$lib/stores";
+    import { mintFileToken } from "../lib/permissionNft.js";
 
 
     const providerOptions = {
@@ -55,7 +56,7 @@
         $signer = provider.getSigner();
 
         isConnected = true;
-        initApp();
+        await initApp();
 
         provider.on("accountsChanged", (accounts) => {
             console.log('accounts', accounts);
@@ -87,40 +88,45 @@
             chain: "ethereum-goerli"
         });
 
-        $rootFolder = await getRootFolderId();
+        $rootFolder = await getRootFolderCid();
+        console.log('root', $rootFolder)
     }
 
-    async function getRootFolderId() {
+    async function getRootFolderCid() {
+        let folderCid;
+
         const tables = await tableland.list();
         let dataTable = tables.find(table => table.name.startsWith(USER_TABLE_NAME))?.name;
         console.log('connect', tables, dataTable);
 
-        if (dataTable !== undefined) {
-            // const { name } = await tableland.create(
-            //     `root_folder text`,
-            //     USER_TABLE_NAME
-            // );
+        if (dataTable === undefined) {
+            const { name } = await tableland.create(
+                `root_folder text`,
+                USER_TABLE_NAME
+            );
 
-            dataTable = 'pip_user_5_83';
+            dataTable = name;
 
-            const rootFolder = await createFleekFolder(`/${await $signer.getAddress()}`, 'root.txt', 'empty', 'text/plain');
+            folderCid = await createFleekFolder(`/${await $signer.getAddress()}`, 'root.txt', 'empty', 'text/plain');
 
             const insertRes = await tableland.write(
-                `INSERT INTO ${dataTable} (root_folder) VALUES (${rootFolder});`
+                `INSERT INTO ${dataTable} (root_folder) VALUES (${folderCid});`
             );
-            console.log('root', insertRes, rootFolder);
+            console.log('new root', insertRes, folderCid);
+        } else {
+            const { columns, rows } = await tableland.read(`SELECT * FROM ${dataTable};`);
+            console.log('table', columns, rows);
+
+            folderCid = rows[0][0];
         }
 
-        const { columns, rows } = await tableland.read(`SELECT * FROM ${dataTable};`);
-        console.log('table', columns, rows);
-
-        return rootFolder;
+        return folderCid;
     }
 
     function handleUploadComplete(url, fileName, fileType, cid) {
         console.log('complete', cid);
 
-
+        mintFileToken(cid);
     }
 </script>
 
