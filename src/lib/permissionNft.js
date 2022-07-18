@@ -1,3 +1,8 @@
+/*
+    (c) 2022 Pipele
+    This code is licensed under MIT license (see LICENSE for details)\
+*/
+
 import { ethers } from "ethers";
 import { signer } from "./stores.js";
 import { SHARE_NFT_ABI, SHARE_NFT_ADDRESS } from "./constants.js";
