@@ -21,6 +21,7 @@
     export let helpText = '';
     export let id = '';
     export let encrypt = false;
+    export let rootFolder = '';
 
     export let uploadButton ='', uploadImage = '';
 
@@ -57,7 +58,6 @@
     }
 
 
-
     async function uploadFile(file) {
         preFileCallback();
         isUploading = true;
@@ -76,7 +76,7 @@
             file = await encryptFile(file);
         }
 
-        const cid = await uploadFleekFile(file, onStoredChunk);
+        const cid = await uploadFleekFile(rootFolder, file, onStoredChunk);
         const url = `https://ipfs.io/ipfs/${cid}`;
 
         if (!showButton) {

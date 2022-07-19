@@ -4,35 +4,56 @@
 */
 
 import LitJsSdk from 'lit-js-sdk';
+import { SHARE_NFT_ADDRESS } from "./constants.js";
 
+
+const chain = 'goerli';
 
 const accessControlConditions = [{
-        contractAddress: '',
-        standardContractType: '',
-        chain: 'goerli',
-        method: 'eth_getBalance',
-        parameters: [':userAddress', 'latest'],
-        returnValueTest: {
-            comparator: '>=',
-            value: '1000000000000',  // 0.000001 ETH
-        },
-}]
+    contractAddress: SHARE_NFT_ADDRESS,
+    standardContractType: 'ERC1155',
+    chain,
+    method: 'balanceOf',
+    parameters: [
+        ':userAddress',
+        '9541'
+    ],
+    returnValueTest: {
+        comparator: '>',
+        value: '0'
+    }
+}];
 
 export async function encryptFile(file) {
-    const client = new LitJsSdk.LitNodeClient();
-    await client.connect();
-    window.litNodeClient = client;
+    let encryptedZip, symmetricKey;
 
-    const chain = 'goerli';
+    if (!window.litNodeClient) {
+        const litNodeClient = new LitJsSdk.LitNodeClient();
+        await litNodeClient.connect();
+        window.litNodeClient = litNodeClient;
+    }
+
     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
     // < 20MB  -- encryptFile()
-    // < 20MB  -- zipAndEncryptFiles()
+    // > 20MB  -- zipAndEncryptFiles(), encryptFileAndZipWithMetadata
     // const { encryptedString, symmetricKey } = await LitJsSdk.encryptString("this is a secret message");
     // const { encryptedString, symmetricKey } = await LitJsSdk.encryptFile({file});
-    const { encryptedZip, symmetricKey } = await LitJsSdk.zipAndEncryptFiles([file]);
 
-    const encryptedSymmetricKey = await window.litNodeClient.saveEncryptionKey({
+    if (file.size > 20_000_000) {
+        const result = await LitJsSdk.encryptFile(file);
+        encryptedZip = result.encryptedFile;
+        symmetricKey = result.symmetricKey;
+    } else {
+        const result = await LitJsSdk.encryptFileAndZipWithMetadata({
+            authSig, accessControlConditions, chain, file, litNodeClient
+        });
+
+        encryptedZip = result.zipBlob;
+        symmetricKey = result.symmetricKey;
+    }
+
+    await window.litNodeClient.saveEncryptionKey({
         accessControlConditions,
         symmetricKey,
         authSig,
@@ -40,6 +61,22 @@ export async function encryptFile(file) {
     });
 
     return new File([encryptedZip], file.name, { type: encryptedZip.type });
+}
+
+export async function decrypt(file) {
+    if (!window.litNodeClient) {
+        const litNodeClient = new LitJsSdk.LitNodeClient();
+        await litNodeClient.connect();
+        window.litNodeClient = litNodeClient;
+    }
+
+    const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain })
+
+    const {decryptedFile, metadata } = await LitJsSdk.decryptZipFileWithMetadata({
+        authSig, file, litNodeClient
+    });
+
+
 }
 
 

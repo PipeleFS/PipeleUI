@@ -3,8 +3,10 @@
     This code is licensed under GPLv3 license (see LICENSE for details)
 */
 
+import { get } from 'svelte/store';
 import { Web3Storage } from 'web3.storage';
 import fleekStorage from '@fleekhq/fleek-storage-js';
+import { selectedFiles } from "./stores.js";
 
 
 export async function uploadWeb3Json(name, data) {
@@ -41,11 +43,11 @@ export async function uploadFleekText(fileName, data, mimeType) {
     return uploadedFile.hash;
 }
 
-export async function uploadFleekFile(file) {
+export async function uploadFleekFile(prefix, file) {
     const uploadedFile  = await fleekStorage.upload({
         apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
         apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
-        key: file.name,
+        key: `/${prefix}/${file.name}`,
         ContentType: file.type,
         data: file,
         httpUploadProgressCallback: (event) => {
@@ -84,5 +86,18 @@ export async function listFleekFiles(listPrefix) {
 }
 
 export async function deleteFleekFile() {
+    console.log(get(selectedFiles));
 
+    for (const item of get(selectedFiles)) {
+        await fleekStorage.deleteFile({
+            apiKey: import.meta.env.CLIENT_FLEEK_STORAGE_KEY,
+            apiSecret: import.meta.env.CLIENT_FLEEK_STORAGE_SECRET,
+            key: item
+        });
+
+        // TODO: clear item from selectedFiles
+        // TODO: delete access NFT of item
+
+        console.log('cleared');
+    }
 }

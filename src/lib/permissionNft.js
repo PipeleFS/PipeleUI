@@ -12,7 +12,7 @@ import { get } from 'svelte/store';
 
 export async function mintFileToken(cid) {
     const contract = new ethers.Contract(SHARE_NFT_ADDRESS, SHARE_NFT_ABI, get(signer));
-    const shareTx = contract.mint(cid);
+    const shareTx = await contract.mint(cid);
     await shareTx.wait();
 }
 

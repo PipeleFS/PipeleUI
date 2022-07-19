@@ -6,22 +6,17 @@ This code is licensed under MIT license (see LICENSE for details)
 <script>
     import { onMount } from "svelte";
 
-    import Upload from "$lib/Upload.svelte";
     import FileList from "$lib/FileList.svelte";
 
     import { ethers } from "ethers";
     import Web3Modal from "web3modal";
     import WalletConnectProvider from "@walletconnect/web3-provider";
 
-    import Download from "$lib/Download.svelte";
-    import Share from "$lib/Share.svelte";
-
     import { connect as tlConnect } from '@tableland/sdk';
 
     import { USER_TABLE_NAME } from '$lib/constants';
-    import { createFleekFolder, deleteFleekFile } from '$lib/storage';
+    import { createFleekFolder } from '$lib/storage';
     import { rootFolder, signer } from "$lib/stores";
-    import { mintFileToken } from "../lib/permissionNft.js";
 
 
     const providerOptions = {
@@ -127,12 +122,6 @@ This code is licensed under MIT license (see LICENSE for details)
 
         return folderCid;
     }
-
-    function handleUploadComplete(url, fileName, fileType, cid) {
-        console.log('complete', cid);
-
-        mintFileToken(cid);
-    }
 </script>
 
 
@@ -148,16 +137,6 @@ This code is licensed under MIT license (see LICENSE for details)
     <section id="content">
         <FileList bind:hasSelection />
 
-        <!-- To get a first working implementation fast, this directly opens a file select dialog
-             Dedicated dialog will be implemented during 2nd step app completion -->
-        <div>
-            <Upload buttonLabel="Upload" showButton="true" encrypt="true" postFileCallback="{handleUploadComplete}"/>
-            <Share disabled="{hasSelection !== true}"/>
-            <Download disabled="{hasSelection !== true}"/>
-        </div>
-        <div>
-            <button on:click={deleteFleekFile} disabled="{hasSelection === false}">Delete</button>
-        </div>
         <div>
             <button on:click={disconnect}>Disconnect</button>
         </div>

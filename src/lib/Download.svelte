@@ -4,8 +4,18 @@ This code is licensed under MIT license (see LICENSE for details)
 -->
 
 <script>
-    export let disabled
+    import { decrypt } from "./encrypt.js";
+    import { selectedFiles } from "./stores.js";
+
+    export let disabled;
+
+
+    function handleDownload() {
+        $selectedFiles.forEach(file => {
+            decrypt(file);
+        })
+    }
 </script>
 
 
-<button disabled="{disabled}">Download</button>
+<button on:click={handleDownload} disabled="{disabled}">Download</button>
