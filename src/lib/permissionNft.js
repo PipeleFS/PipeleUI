@@ -18,7 +18,7 @@ export async function mintFileToken(cid) {
 
 export async function sendAccessPermission(recipientAddress, fileId) {
     const contract = new ethers.Contract(SHARE_NFT_ADDRESS, SHARE_NFT_ABI, get(signer));
-    const shareTx = contract.share(recipientAddress);
+    const shareTx = await contract.share(recipientAddress, fileId);
     await shareTx.wait();
 
     console.log('share token mined');

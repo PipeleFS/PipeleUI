@@ -115,9 +115,11 @@ This code is licensed under MIT license (see LICENSE for details)
             console.log('new root', insertRes, folderCid);
         } else {
             const { columns, rows } = await tableland.read(`SELECT * FROM ${dataTable};`);
+            folderCid = rows[0][0];
             console.log('table', columns, rows);
 
-            folderCid = rows[0][0];
+            // In case tableland is down
+            // folderCid = '0xdD372842cB80c1892243D20eE4ad0979c293Cad5';  // this is the wallet address
         }
 
         return folderCid;

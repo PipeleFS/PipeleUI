@@ -12,7 +12,7 @@ This code is licensed under MIT license (see LICENSE for details)
     import Upload from "./Upload.svelte";
     import Share from "./Share.svelte";
     import Download from "./Download.svelte";
-    import { mintFileToken } from "./permissionNft.js";
+    import { mintFileToken, sendAccessPermission } from "./permissionNft.js";
 
     export let hasSelection;
 
@@ -28,10 +28,20 @@ This code is licensed under MIT license (see LICENSE for details)
         signerAddress = await $signer.getAddress();
     });
 
-    function handleUploadComplete(url, fileName, fileType, cid) {
+    async function handleUploadComplete(url, fileName, fileType, cid) {
         console.log('complete', cid, url);
 
-        mintFileToken(cid);
+        listItems = listFleekFiles($rootFolder);
+
+        await mintFileToken(cid);
+
+        // Allow uploader to download the file
+        await sendAccessPermission(await $signer.getAddress(), 0);
+    }
+
+    async function handleDelete() {
+        await deleteFleekFile();
+        listItems = listFleekFiles($rootFolder);
     }
 </script>
 
@@ -64,5 +74,5 @@ This code is licensed under MIT license (see LICENSE for details)
     <Download disabled="{hasSelection !== true}"/>
 </div>
 <div>
-    <button on:click={deleteFleekFile} disabled="{hasSelection === false}">Delete</button>
+    <button on:click={handleDelete} disabled="{hasSelection === false}">Delete</button>
 </div>

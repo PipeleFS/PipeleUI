@@ -16,7 +16,7 @@ const accessControlConditions = [{
     method: 'balanceOf',
     parameters: [
         ':userAddress',
-        '9541'
+        '0'  // TODO: share id for file
     ],
     returnValueTest: {
         comparator: '>',
@@ -45,7 +45,10 @@ export async function encryptFile(file) {
         encryptedZip = result.encryptedFile;
         symmetricKey = result.symmetricKey;
     } else {
+        // TODO: Set correct id of share token
+
         const result = await LitJsSdk.encryptFileAndZipWithMetadata({
+            // eslint-disable-next-line no-undef
             authSig, accessControlConditions, chain, file, litNodeClient
         });
 
@@ -72,11 +75,12 @@ export async function decrypt(file) {
 
     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain })
 
-    const {decryptedFile, metadata } = await LitJsSdk.decryptZipFileWithMetadata({
+    const result = await LitJsSdk.decryptZipFileWithMetadata({
+        // eslint-disable-next-line no-undef
         authSig, file, litNodeClient
     });
 
-
+    return result;
 }
 
 
