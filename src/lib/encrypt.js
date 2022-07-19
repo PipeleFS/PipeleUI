@@ -80,7 +80,17 @@ export async function decrypt(file) {
         authSig, file, litNodeClient
     });
 
+    console.log('decrypt', result.decryptedFile, result.metadata);
+
     return result;
+}
+
+export async function downloadBuffer(filename, buffer, mimetype) {
+    LitJsSdk.downloadFile({
+        filename,
+        data: new Uint8Array(buffer),
+        mimetype
+    });
 }
 
 
