@@ -5,6 +5,7 @@ This code is licensed under MIT license (see LICENSE for details)
 
 <script>
     import { sendAccessPermission } from "./permissionNft.js";
+    import { getData, getIdofFileQuery } from "./queries.js";
 
     export let disabled;
 
@@ -12,17 +13,16 @@ This code is licensed under MIT license (see LICENSE for details)
     let dialog, confirmShare;
 
 
-    // verify that the recipient doesn't already have received the file
-    // open dialog for sharing parameters
+    // TODO: verify that the recipient doesn't already have received the file
 
     function showModal() {
         dialog.addEventListener('close', async () => {
             console.log('share', dialog.returnValue);
 
-            // mint access token for the file - files, recipient
             // send message to receiver - recipient
 
-            sendAccessPermission(dialog.returnValue)
+            const id = getData(getIdofFileQuery, 'cid');    // TODO: get actual cid from selected file(s)
+            sendAccessPermission(dialog.returnValue, id)
         }, { once: true});
 
         dialog.showModal()

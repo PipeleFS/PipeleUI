@@ -127,6 +127,189 @@ This code is licensed under MIT license (see LICENSE for details)
 </script>
 
 
+<style>
+
+    snap-tabs {
+        --hue: 328deg;
+        --accent: var(--hue) 100% 54%;
+        --indicator-size: 2px;
+        --space-1: .5rem;
+        --space-2: 1rem;
+        --space-3: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative
+    }
+
+    snap-tabs a, snap-tabs article, snap-tabs header, snap-tabs nav, snap-tabs section {
+        outline-color: hsl(var(--accent));
+        outline-offset: -5px
+    }
+
+    .scroll-snap-x {
+        overflow: auto hidden;
+        overscroll-behavior-x: contain;
+        -ms-scroll-snap-type: x mandatory;
+        scroll-snap-type: x mandatory
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .scroll-snap-x {
+            scroll-behavior: smooth
+        }
+    }
+
+    @media (hover: none) {
+        .scroll-snap-x {
+            scrollbar-width: none
+        }
+
+        .scroll-snap-x::-webkit-scrollbar {
+            width: 0;
+            height: 0
+        }
+    }
+
+    snap-tabs > header {
+        --text-color: hsl(var(--hue) 5% 40%);
+        --text-active-color: hsl(var(--hue) 20% 10%);
+        flex-shrink: 0;
+        min-block-size: -webkit-fit-content;
+        min-block-size: -moz-fit-content;
+        min-block-size: fit-content;
+        display: flex;
+        flex-direction: column
+    }
+
+    snap-tabs > header > nav {
+        display: flex
+    }
+
+    snap-tabs > header a {
+        scroll-snap-align: start;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        font-size: .8rem;
+        color: var(--text-color);
+        font-weight: 700;
+        text-decoration: none;
+        padding: var(--space-2) var(--space-3)
+    }
+
+    snap-tabs > header a > svg {
+        inline-size: 1.5em;
+        pointer-events: none
+    }
+
+    snap-tabs > header a:hover {
+        background: hsl(var(--accent)/5%)
+    }
+
+    snap-tabs > header a:focus {
+        outline-offset: -.5ch
+    }
+
+    snap-tabs > header > .snap-indicator {
+        inline-size: 0;
+        block-size: var(--indicator-size);
+        border-radius: var(--indicator-size);
+        background: hsl(var(--accent))
+    }
+
+    snap-tabs > section {
+        block-size: 100%;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 100%
+    }
+
+    snap-tabs > section > article {
+        scroll-snap-align: start;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        padding: var(--space-2) var(--space-3)
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        snap-tabs > header a {
+            -webkit-border-after: var(--indicator-size) solid hsl(var(--accent)/0%);
+            border-block-end: var(--indicator-size) solid hsl(var(--accent)/0%);
+            transition: color .7s ease, border-color .5s ease
+        }
+
+        snap-tabs > header a:active, snap-tabs > header a:target, snap-tabs > header a[active] {
+            color: var(--text-active-color);
+            border-block-end-color: hsl(var(--accent))
+        }
+
+        snap-tabs .snap-indicator {
+            visibility: hidden
+        }
+    }
+
+    p {
+        max-inline-size: 35ch;
+        margin-block: .5ch
+    }
+
+    p + p {
+        -webkit-margin-before: 1rem;
+        margin-block-start: 1rem
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        -webkit-margin-after: .5rem;
+        margin-block-end: .5rem;
+        line-height: 1
+    }
+
+    h2:first-of-type {
+        -webkit-margin-before: 0;
+        margin-block-start: 0
+    }
+
+    article {
+        box-sizing: border-box;
+        font-family: Blokk;
+        font-size: 1.25rem;
+        line-height: 1;
+        color: #333
+    }
+
+    .github-corner {
+        fill: #ccc;
+        color: #fff
+    }
+
+    @-webkit-keyframes octocat-wave {
+        0%, to {
+            transform: rotate(0)
+        }
+        20%, 60% {
+            transform: rotate(-25deg)
+        }
+        40%, 80% {
+            transform: rotate(10deg)
+        }
+    }
+
+    @keyframes octocat-wave {
+        0%, to {
+            transform: rotate(0)
+        }
+        20%, 60% {
+            transform: rotate(-25deg)
+        }
+        40%, 80% {
+            transform: rotate(10deg)
+        }
+    }
+</style>
+
+
 {#if (!isConnected)}
     <section id="intro">
         <h1>Pipele</h1>
@@ -136,11 +319,32 @@ This code is licensed under MIT license (see LICENSE for details)
 {/if}
 
 {#if (isConnected)}
-    <section id="content">
-        <FileList bind:hasSelection />
+    <snap-tabs>
+        <header class="scroll-snap-x">
+            <nav>
+                <a active href="#responsive">Files</a>
+                <a href="#accessible">Received</a>
+                <a href="#overscroll">Messages</a>
+            </nav>
+            <span class="snap-indicator"></span>
+        </header>
+        <section class="scroll-snap-x">
+            <article id="responsive">
+                <h2>Uploaded files</h2>
 
-        <div>
-            <button on:click={disconnect}>Disconnect</button>
-        </div>
-    </section>
+                <FileList bind:hasSelection />
+
+            </article>
+            <article id="accessible">
+                <h2>received</h2>
+            </article>
+            <article id="overscroll">
+                <h2>Messages</h2>
+            </article>
+        </section>
+    </snap-tabs>
+
+    <div>
+        <button on:click={disconnect}>Disconnect</button>
+    </div>
 {/if}
