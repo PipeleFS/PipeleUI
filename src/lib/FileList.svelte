@@ -14,11 +14,9 @@ This code is licensed under MIT license (see LICENSE for details)
     import Download from "./Download.svelte";
     import { mintFileToken, sendAccessPermission } from "./permissionNft.js";
 
-    export let hasSelection;
 
-
+    let hasSelection;
     let signerAddress;
-
 
     $: hasSelection = $selectedFiles.length !== 0
     $: listItems = listFleekFiles($rootFolder);

@@ -7,6 +7,7 @@ This code is licensed under MIT license (see LICENSE for details)
     import { onMount } from "svelte";
 
     import FileList from "$lib/FileList.svelte";
+    import ReceivedList from "$lib/ReceivedList.svelte";
 
     import { ethers } from "ethers";
     import Web3Modal from "web3modal";
@@ -17,6 +18,7 @@ This code is licensed under MIT license (see LICENSE for details)
     import { USER_TABLE_NAME } from '$lib/constants';
     import { createFleekFolder } from '$lib/storage';
     import { rootFolder, signer } from "$lib/stores";
+    import { getAccessibleFiles, getData } from "$lib/queries.js";
 
 
     const providerOptions = {
@@ -40,14 +42,15 @@ This code is licensed under MIT license (see LICENSE for details)
 
     let tableland;
 
-    let hasSelection = false;
-
 
     onMount(async () => {
         const cachedProviderName = JSON.parse(localStorage.getItem("WEB3_CONNECT_CACHED_PROVIDER"));
         if (cachedProviderName) {
             await connect();
         }
+
+        const shares = await getData(getAccessibleFiles, '0xdD372842cB80c1892243D20eE4ad0979c293Cad5');
+        console.log('shares', shares.data.data);
     })
 
     async function connect() {
@@ -128,7 +131,6 @@ This code is licensed under MIT license (see LICENSE for details)
 
 
 <style>
-
     snap-tabs {
         --hue: 328deg;
         --accent: var(--hue) 100% 54%;
@@ -324,22 +326,17 @@ This code is licensed under MIT license (see LICENSE for details)
             <nav>
                 <a active href="#responsive">Files</a>
                 <a href="#accessible">Received</a>
-                <a href="#overscroll">Messages</a>
             </nav>
             <span class="snap-indicator"></span>
         </header>
         <section class="scroll-snap-x">
             <article id="responsive">
                 <h2>Uploaded files</h2>
-
-                <FileList bind:hasSelection />
-
+                <FileList />
             </article>
             <article id="accessible">
                 <h2>received</h2>
-            </article>
-            <article id="overscroll">
-                <h2>Messages</h2>
+                <ReceivedList />
             </article>
         </section>
     </snap-tabs>

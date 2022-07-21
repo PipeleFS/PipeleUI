@@ -80,12 +80,12 @@ export async function listFleekFiles(listPrefix) {
             prefix: listPrefix,
             getOptions: [
                 'key',
-                //'hash',
+                'hash',
                 'publicUrl'
             ],
         });
     } else {
-        return []
+        return [];
     }
 }
 

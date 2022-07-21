@@ -1,11 +1,12 @@
 <!--
-(c) 2022 Pipele
-This code is licensed under MIT license (see LICENSE for details)
+    (c) 2022 Pipele
+    This code is licensed under MIT license (see LICENSE for details)
 -->
 
 <script>
     import { sendAccessPermission } from "./permissionNft.js";
     import { getData, getIdofFileQuery } from "./queries.js";
+    import { selectedFiles } from "./stores.js";
 
     export let disabled;
 
@@ -19,15 +20,38 @@ This code is licensed under MIT license (see LICENSE for details)
         dialog.addEventListener('close', async () => {
             console.log('share', dialog.returnValue);
 
-            // send message to receiver - recipient
+            if (dialog.returnValue === 'cancel') return
 
-            const id = getData(getIdofFileQuery, 'cid');    // TODO: get actual cid from selected file(s)
-            sendAccessPermission(dialog.returnValue, id)
+            // TODO: get actual cid from selected file(s) from fleek ()
+            // 6: bafybeifofeckwzgkpicae5hsctxnicfpe5kc3aa2q3rmolkxuvg4wktivy
+            // 7: bafybeifieskylnqvikqc47rrohtcmp4v3slondvvbrxazi36pkso5zvlzm
+
+            const idData = await getData(getIdofFileQuery, 'bafybeifieskylnqvikqc47rrohtcmp4v3slondvvbrxazi36pkso5zvlzm');
+            await sendAccessPermission(dialog.returnValue, Number.parseInt(idData.data.data.pipeleEntities[0].id));
+
+            // TODO: send message to receiver - recipient
         }, { once: true});
 
         dialog.showModal()
     }
+
+    function handleRemove(item) {
+
+        console.log($selectedFiles)
+
+        const filtered = $selectedFiles.filter(share => share !== item);
+        $selectedFiles = filtered
+
+        console.log(item, $selectedFiles)
+    }
 </script>
+
+
+<style>
+    .removeShare {
+        width: 20px;
+    }
+</style>
 
 
 <button disabled="{disabled}" on:click={showModal}>Share</button>
@@ -40,7 +64,23 @@ This code is licensed under MIT license (see LICENSE for details)
             <input on:change={(event) => confirmShare.value = event.target.value} />
         </label>
         <div>
-            <button bind:this={confirmShare}>Send</button>
+            <label for="selected">Selected Files</label>
+            <ul id="selected">
+                {#each $selectedFiles as item}
+                    <li>
+                        <span>name</span>
+                        <img on:click={() => handleRemove(item)}
+                             class="removeShare"
+                             src="/delete-stop-svgrepo-com.svg"
+                             alt="remove file from list"/>
+                    </li>
+                {/each}
+            </ul>
+        </div>
+
+        <div>
+            <button value="cancel">cancel</button>
+            <button bind:this={confirmShare} value="default" disabled="{$selectedFiles.length === 0}">Send</button>
         </div>
     </form>
 </dialog>

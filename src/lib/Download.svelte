@@ -5,14 +5,18 @@ This code is licensed under MIT license (see LICENSE for details)
 
 <script>
     import { decrypt, downloadBuffer } from "./encrypt.js";
-    import { selectedFiles } from "./stores.js";
+    import { selectedFiles, selectedShares } from "./stores.js";
     import { downloadFleekFile } from "./storage.js";
+    import { SELECTION_TYPES } from "./constants.js";
 
     export let disabled;
+    export let selectionType = SELECTION_TYPES.files;
 
 
     async function handleDownload() {
-        for (const key of $selectedFiles) {
+        const selection = selectionType === SELECTION_TYPES.files ? $selectedFiles : $selectedShares;
+
+        for (const key of selection) {
             const downloadResult = await downloadFleekFile(key);
 
             console.log('download', downloadResult);

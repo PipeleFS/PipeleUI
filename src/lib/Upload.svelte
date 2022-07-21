@@ -59,7 +59,7 @@
 
 
     async function uploadFile(file) {
-        preFileCallback();
+        const preResult = preFileCallback();
         isUploading = true;
 
         fileName = file.name;

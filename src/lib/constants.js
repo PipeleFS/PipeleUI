@@ -5,6 +5,11 @@
 
 export const USER_TABLE_NAME = 'pip_user';
 
+export const SELECTION_TYPES = {
+    files: 'files',
+    received: 'received'
+}
+
 export const SHARE_NFT_ADDRESS = '0xBB99FCaafCa56E36cBA706F70258bE6e453Fb028';
 export const SHARE_NFT_ABI = [{
     "inputs": [],

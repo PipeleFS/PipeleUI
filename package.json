@@ -35,7 +35,7 @@
 	},
 	"dependencies": {
 		"@apollo/client": "^3.6.9",
-		"@fleekhq/fleek-storage-js": "^1.0.21",
+		"@fleekhq/fleek-storage-js": "^1.0.22",
 		"@spacehq/sdk": "^0.0.30",
 		"@sveltejs/adapter-static": "^1.0.0-next.37",
 		"@tableland/sdk": "^2.0.2",
