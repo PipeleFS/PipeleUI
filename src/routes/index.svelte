@@ -41,6 +41,8 @@ This code is licensed under MIT license (see LICENSE for details)
 
     let instance, provider;
     let isConnected = false;
+    let activeContent = 'files';
+    let selectedComponent = FileList;
 
     let tableland;
 
@@ -129,38 +131,89 @@ This code is licensed under MIT license (see LICENSE for details)
 
         return folderCid;
     }
+
+    function handleNav(key, component) {
+        activeContent = key;
+        selectedComponent = component;
+    }
 </script>
+
+
+<style>
+    nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    nav a {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        height: 58px;
+
+        padding-inline-start: 37px;
+
+        background-color: #E0E0E0;
+    }
+
+    nav a.active {
+        background-color: #fff;
+    }
+
+    #content {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+
+        height: 90px;
+
+        margin-block-end: 5px;
+        padding-inline: 40px;
+
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    #logo {
+        width: 180px;
+        height: 54px;
+    }
+</style>
 
 
 {#if (!isConnected)}
     <Welcome on:connect={connect} />
-{/if}
+{:else}
 
-{#if (isConnected)}
-    <snap-tabs>
-        <header class="scroll-snap-x">
-            <nav>
-                <a active href="#responsive">Files</a>
-                <a href="#friends">Friends</a>
-                <a href="#accessible">Received</a>
-            </nav>
-            <span class="snap-indicator"></span>
-        </header>
-        <section class="scroll-snap-x">
-            <article id="responsive">
-                <h2>Uploaded files</h2>
-                <FileList />
-            </article>
-            <article>
-                <h2>Friends</h2>
-                <FriendsList />
-            </article>
-            <article id="accessible">
-                <h2>received</h2>
-                <ReceivedList />
-            </article>
-        </section>
-    </snap-tabs>
+    <header>
+        <img id="logo" src="/pipele.png" alt="pipele logo" />
+    </header>
+
+    <section id="content">
+        <nav>
+            <a class:active={activeContent === 'files'} href="#responsive"
+               on:click={() => handleNav('files', FileList)}>
+                <img src="/upload-icon.svg" alt="upload files" />
+                <span>Uploaded Files</span>
+            </a>
+            <a class:active={activeContent === 'friends'} href="#friends"
+               on:click={() => handleNav('friends', FriendsList)}>
+                <img src="/friends-icon.svg" alt="friends list" />
+                <span>Friends list</span>
+            </a>
+            <a class:active={activeContent === 'received'} href="#accessible"
+               on:click={() => handleNav('received', ReceivedList)}>
+                <img src="/received-icon.svg" alt="received files" />
+                <span>Received</span>
+            </a>
+        </nav>
+
+        <svelte:component this="{selectedComponent}" />
+    </section>
 
     <div>
         <button on:click={disconnect}>Disconnect</button>

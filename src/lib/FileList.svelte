@@ -10,7 +10,6 @@ This code is licensed under MIT license (see LICENSE for details)
     import { rootFolder, selectedFiles, signer } from "./stores.js";
 
     import Share from "./Share.svelte";
-    import Download from "./Download.svelte";
     import UploadDialog from "./UploadDialog.svelte";
 
 
@@ -32,30 +31,71 @@ This code is licensed under MIT license (see LICENSE for details)
 </script>
 
 
-{#await listItems}
-    loading...
-    {:then list}
-        {#each list as item, index}
-            {#if (!item.key.endsWith('root.txt'))}
-                <ul>
-                    <li>
-                        <input id={`item-${index}`} type="checkbox" bind:group={$selectedFiles} value="{item.key}" />
-                        <label for="{`item-${index}`}">{item.key}</label>
-                    </li>
-                </ul>
-            {:else}
-                <p>root for {signerAddress}</p>
-            {/if}
-        {:else}
-            <p>No items yet</p>
-        {/each}
-{/await}
+<style>
+    #fileList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+
+        margin-inline-start: 60px;
+    }
+
+    #fileList li {
+        text-align: center;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+
+        width: 190px;
+        height: 190px;
+
+        margin-block-end: 10px;
+        padding: 10px;
+
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .card .fileIcon {
+        width: 64px;
+    }
+
+    .card .fileName {
+        word-break: break-word;
+    }
+</style>
+
 
 <div>
-    <UploadDialog />
-    <Share disabled="{hasSelection !== true}"/>
-    <Download disabled="{hasSelection !== true}"/>
-</div>
-<div>
-    <button on:click={handleDelete} disabled="{hasSelection === false}">Delete</button>
+    <div>
+        <UploadDialog/>
+        <Share disabled="{hasSelection !== true}"/>
+        <button on:click={handleDelete} disabled="{hasSelection === false}">Delete</button>
+    </div>
+
+    {#await listItems}
+        loading...
+    {:then list}
+        <ul id="fileList">
+            {#each list as item, index}
+                {#if (!item.key.endsWith('root.txt'))}
+                        <li>
+                            <div class="card">
+                                <img class="fileIcon" src="/file-icon.svg" alt="file icon" />
+                                <label class="fileName" for="{`item-${index}`}">{item.key.split('/').at(-1)}</label>
+                            </div>
+                            <input id={`item-${index}`} type="checkbox" bind:group={$selectedFiles} value="{item.key}"/>
+                        </li>
+                {:else}
+<!--                    <li>root for {signerAddress}</li>-->
+                {/if}
+            {:else}
+                <p>No items yet</p>
+            {/each}
+        </ul>
+    {/await}
 </div>
