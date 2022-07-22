@@ -59,7 +59,7 @@
 
 
     async function uploadFile(file) {
-        const preResult = preFileCallback();
+        preFileCallback();
         isUploading = true;
 
         fileName = file.name;
@@ -97,11 +97,11 @@
     }
 
     .dropzone {
-        /*height: 4rem;*/
-        /*display: flex;*/
-        /*flex-direction: column;*/
-        /*align-items: center;*/
-        /* margin: 2rem; */
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 2rem;
     }
 
     .dropzone.disabled {
@@ -133,8 +133,11 @@
     }
 
     .button1 {
-        width: 169px;
-        height: 64px;
+        width: 235px;
+        height: 59px;
+
+        background: #6C63FF;
+        border-radius: 37px;
 
         cursor: pointer;
     }
@@ -144,8 +147,11 @@
     }
 
     .button2 {
-        width: 288px;
-        height: 360px;
+        width: 100%;
+        height: 100%;
+
+        border: 4px dashed #6C63FF;
+        border-radius: 20px;
 
         background-color: transparent;
     }
@@ -181,12 +187,13 @@
 
 <slot name="search"/>
 
-<div class:disabled={!dropEnabled} class="dropzone" class:button2={!showButton}
+<div class:disabled={!dropEnabled} class="dropzone" class:button2={showButton === false}
      on:dragover|preventDefault={handleDropOver}
-     on:drop|preventDefault={handleDrop}>
+     on:drop|preventDefault={handleDrop}
+     on:click={() => uploadElement.click()}>
     <span>{message}</span>
 
-    <button class:button1={showButton} class:button2={!showButton} disabled={!dropEnabled} {uploadButton} data-testid='{$$props["data-testid"]}'>
+    <button class:button1={showButton === "true"} class:button2={showButton === "false"} disabled={!dropEnabled} {uploadButton} data-testid='{$$props["data-testid"]}'>
         {#if ((imageUrl || defaultImage) && !showButton)}<img src="{imageUrl || defaultImage}" alt="uploaded" {uploadImage} />{/if}
         {#if ((!fileName && !imageUrl) || showButton)}
             <label class="buttonLabel" class:linkLabel={showButton} for={`fileinput-${id}`} >
