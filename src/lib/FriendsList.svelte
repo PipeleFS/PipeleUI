@@ -23,8 +23,9 @@ This code is licensed under MIT license (see LICENSE for details)
         // Open dialog to set nickname
     }
 
-    function handleStaring() {
-
+    function handleStaring(event, item) {
+        item.starred = !item.starred;
+        event.target.src = item.starred === true ? '/star-blu.svg' : '/star.svg';
     }
 </script>
 
@@ -75,9 +76,6 @@ This code is licensed under MIT license (see LICENSE for details)
 
         margin-block-end: 10px;
         padding: 10px;
-
-        border: 1px solid #ddd;
-        border-radius: 10px;
     }
 
     .card .star {
@@ -92,7 +90,6 @@ This code is licensed under MIT license (see LICENSE for details)
         word-break: keep-all;
         pointer-events: none;
     }
-
 </style>
 
 <div>
@@ -107,7 +104,7 @@ This code is licensed under MIT license (see LICENSE for details)
             {#each list.data.data.pipeleShares as item, index}
                 <li>
                     <div class="card" on:click={() => handleCardClick(`#item-${index}`)}>
-                        <img on:click={handleStaring} class="star" src="/star.svg" alt="star icon" />
+                        <img on:click={(event) => handleStaring(event, item)} class="star" src="/star.svg" alt="star icon" />
                         <p class="address">{item.to}</p>
                     </div>
                 </li>
