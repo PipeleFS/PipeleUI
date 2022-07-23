@@ -20,6 +20,10 @@ This code is licensed under MIT license (see LICENSE for details)
     });
 
     function handleCardClick() {
+        // Open dialog to set nickname
+    }
+
+    function handleStaring() {
 
     }
 </script>
@@ -103,7 +107,7 @@ This code is licensed under MIT license (see LICENSE for details)
             {#each list.data.data.pipeleShares as item, index}
                 <li>
                     <div class="card" on:click={() => handleCardClick(`#item-${index}`)}>
-                        <img class="star" src="/star.svg" alt="star icon" />
+                        <img on:click={handleStaring} class="star" src="/star.svg" alt="star icon" />
                         <p class="address">{item.to}</p>
                     </div>
                 </li>
