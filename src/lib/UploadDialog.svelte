@@ -38,7 +38,7 @@
 <style>
     dialog {
         width: 80vw;
-        height: 550px;
+        height: 580px;
 
         padding: 0;
     }
@@ -46,11 +46,16 @@
     dialog header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         height: 63px;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 
         padding-inline: 25px;
+    }
+
+    #title {
+        font-size: 36px;
     }
 
     #mainAction {
@@ -76,7 +81,7 @@
     }
 
     #info {
-        margin-top: -215px
+        margin-top: -180px
     }
 
     #info p {
@@ -102,7 +107,7 @@
 
 <dialog bind:this={dialog}>
     <header>
-        <p>Upload file</p>
+        <p id="title">Upload file</p>
         <img class="icon" on:click={() => dialog.close()} src="/close.svg" alt="close dialog" />
     </header>
     <section id="content">
