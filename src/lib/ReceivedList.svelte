@@ -93,7 +93,7 @@
 
 <div>
     <div id="actions">
-        <h2 id="title">Uploaded Files</h2>
+        <h2 id="title">Received Files</h2>
         <Download disabled="{hasSelection !== true}" selectionType="{SELECTION_TYPES.received}"/>
     </div>
 
