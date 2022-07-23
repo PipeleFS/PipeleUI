@@ -118,7 +118,7 @@ This code is licensed under MIT license (see LICENSE for details)
     <div id="actions">
         <h2 id="title">Uploaded Files</h2>
         <UploadDialog/>
-        <Share disabled="{hasSelection !== true}"/>
+        <Share />
         <button id="deleteAction" on:click={handleDelete} disabled="{hasSelection === false}">
             <img src="/delete-icon.svg" alt="" />
             <span>Delete</span>
@@ -136,7 +136,7 @@ This code is licensed under MIT license (see LICENSE for details)
                                 <img class="fileIcon" src="/file-icon.svg" alt="file icon" />
                                 <label class="fileName" for="{`item-${index}`}">{item.key.split('/').at(-1)}</label>
                             </div>
-                            <input id={`item-${index}`} type="checkbox" bind:group={$selectedFiles} value="{item.key}"/>
+                            <input id={`item-${index}`} type="checkbox" bind:group={$selectedFiles} value="{item}"/>
                         </li>
                 {:else}
 <!--                    <li>root for {signerAddress}</li>-->

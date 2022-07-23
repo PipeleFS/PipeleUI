@@ -16,7 +16,7 @@ const accessControlConditions = [{
     method: 'balanceOf',
     parameters: [
         ':userAddress',
-        '0'  // TODO: share id for file
+        '0'
     ],
     returnValueTest: {
         comparator: '>',
@@ -24,8 +24,13 @@ const accessControlConditions = [{
     }
 }];
 
-export async function encryptFile(file) {
+export async function encryptFile(file, tokenId) {
     let encryptedZip, symmetricKey;
+
+    accessControlConditions[0].parameters[0] = [
+        ':userAddress',
+        tokenId.toString()
+    ]
 
     if (!window.litNodeClient) {
         const litNodeClient = new LitJsSdk.LitNodeClient();
@@ -35,18 +40,13 @@ export async function encryptFile(file) {
 
     const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain });
 
-    // < 20MB  -- encryptFile()
-    // > 20MB  -- zipAndEncryptFiles(), encryptFileAndZipWithMetadata
-    // const { encryptedString, symmetricKey } = await LitJsSdk.encryptString("this is a secret message");
-    // const { encryptedString, symmetricKey } = await LitJsSdk.encryptFile({file});
-
     if (file.size > 20_000_000) {
         const result = await LitJsSdk.encryptFile(file);
         encryptedZip = result.encryptedFile;
         symmetricKey = result.symmetricKey;
-    } else {
-        // TODO: Set correct id of share token
 
+        // TODO: Store artifacts
+    } else {
         const result = await LitJsSdk.encryptFileAndZipWithMetadata({
             // eslint-disable-next-line no-undef
             authSig, accessControlConditions, chain, file, litNodeClient

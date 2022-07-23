@@ -11,23 +11,23 @@
     let dialog;
 
 
-    async function handleUloadStarted() {
+    async function handleUloadStarted(fileName) {
+        const fileId = `${$rootFolder}/${fileName}`;
+        await mintFileToken(fileId);
 
+        const tokenId = await getTokenId(fileId);
+        console.log('tokenid', tokenId.toNumber());
+
+        return { tokenId: tokenId.toNumber() };
     }
 
-    async function handleUploadComplete(url, fileName, fileType, cid) {
+    async function handleUploadComplete(url, fileName, fileType, cid, setupValues) {
         console.log('complete', cid, url);
 
         // TODO: Update file list
 
-        const fileId = `/${$rootFolder}/${fileName}`;
-        await mintFileToken(fileId);
-
-        const tokenId = await getTokenId(fileId);
-        console.log('tokenid', tokenId.toNumber())
-
         // Allow uploader to download the file
-        await sendAccessPermission(await $signer.getAddress(), tokenId);
+        await sendAccessPermission(await $signer.getAddress(), setupValues.tokenId);
     }
 
     async function handleUploadDialog() {
@@ -107,7 +107,9 @@
     </header>
     <section id="content">
         <Upload showButton="false" encrypt="true"
-                postFileCallback="{handleUploadComplete}" rootFolder="{$rootFolder}"/>
+                preFileCallback="{handleUloadStarted}"
+                postFileCallback="{handleUploadComplete}"
+                rootFolder="{$rootFolder}"/>
         <div id="info">
             <p>Drag & drop to upload</p>
             <p>or click for the open dialog</p>

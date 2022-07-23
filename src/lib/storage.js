@@ -111,7 +111,7 @@ export async function deleteFleekFile() {
         await fleekStorage.deleteFile({
             apiKey,
             apiSecret,
-            key: item
+            key: item.key
         });
 
         // TODO: clear item from selectedFiles

@@ -4,17 +4,12 @@
 -->
 
 <script>
-    import { sendAccessPermission } from "./permissionNft.js";
-    import { getData, getIdofFileQuery } from "./queries.js";
+    import { getTokenId, sendAccessPermission } from "./permissionNft.js";
     import { selectedFiles } from "./stores.js";
-
-    export let disabled;
 
 
     let dialog, confirmShare;
 
-
-    // TODO: verify that the recipient doesn't already have received the file
 
     function showModal() {
         dialog.addEventListener('close', async () => {
@@ -22,21 +17,18 @@
 
             if (dialog.returnValue === 'cancel') return
 
-            // TODO: get actual cid from selected file(s) from fleek ()
-            // 6: bafybeifofeckwzgkpicae5hsctxnicfpe5kc3aa2q3rmolkxuvg4wktivy
-            // 7: bafybeifieskylnqvikqc47rrohtcmp4v3slondvvbrxazi36pkso5zvlzm
+            console.log($selectedFiles[0].key)
 
-            const idData = await getData(getIdofFileQuery, 'bafybeifieskylnqvikqc47rrohtcmp4v3slondvvbrxazi36pkso5zvlzm');
-            await sendAccessPermission(dialog.returnValue, Number.parseInt(idData.data.data.pipeleEntities[0].id));
+            const tokenId = await getTokenId($selectedFiles[0].key);
+            await sendAccessPermission(dialog.returnValue, tokenId.toNumber());
 
-            // TODO: send message to receiver - recipient
+            // TODO: find usable messaging service and send message to receiver - recipient
         }, { once: true});
 
         dialog.showModal()
     }
 
     function handleRemove(item) {
-
         console.log($selectedFiles)
 
         const filtered = $selectedFiles.filter(share => share !== item);
@@ -75,7 +67,7 @@
 </style>
 
 
-<button id="mainAction" disabled="{disabled}" on:click={showModal}>
+<button id="mainAction" disabled="{$selectedFiles.length !== 1}" on:click={showModal}>
     <img src="/share-icon.svg" alt="" />
     <span>Share</span>
 </button>
@@ -92,7 +84,7 @@
             <ul id="selected">
                 {#each $selectedFiles as item}
                     <li>
-                        <span>name</span>
+                        <span>{item.key}</span>
                         <img on:click={() => handleRemove(item)}
                              class="removeShare"
                              src="/delete-stop-svgrepo-com.svg"

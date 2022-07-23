@@ -59,7 +59,7 @@
 
 
     async function uploadFile(file) {
-        preFileCallback();
+        const setupValues = await preFileCallback(file.name);
         isUploading = true;
 
         fileName = file.name;
@@ -73,7 +73,7 @@
         }
 
         if (encrypt) {
-            file = await encryptFile(file);
+            file = await encryptFile(file, setupValues.tokenId);
         }
 
         const cid = await uploadFleekFile(rootFolder, file, onStoredChunk);
@@ -86,7 +86,7 @@
         uploadElement.value = '';
 
         isUploading = false;
-        postFileCallback(url, file.name, file.type, cid);
+        postFileCallback(url, file.name, file.type, cid, setupValues);
     }
 </script>
 

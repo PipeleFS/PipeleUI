@@ -1,30 +1,28 @@
-import axios from 'axios';
+/* This file has been converted to mjs so that node understands new import statements
+if this code is being run in a browser, rename the files back to .js
+*/
 
+import axios from "axios";
 
 let URL = "https://api.thegraph.com/subgraphs/name/darahask/pipe";
 
-export const getIdofFileQuery = (cid) => `{
-    pipeleEntities(
-      where: {cid: "${cid}"}
+export const getFriends = (addr) => `{
+  pipeleShares(
+    where: {from_contains_nocase: "${addr}"}
     ) {
-      id,
-      owner
-    }
-  }`;
-
-export const getSharedofOwnerQuery = (owner) => `{
-    pipeleEntities(where: {owner: "${owner}"}) {
-      shared,
-      id
-      cid,
+    to
     }
   }`;
 
 export const getAccessibleFiles = (addr) => `{
-    pipeleEntities(where: {shared_contains: ["${addr}"]}) {
-      id,
-      cid,
-      owner
+  pipeleShares(
+    where: {to_contains_nocase: "${addr}"}
+  ) {
+    from
+    pipeleSBT {
+      fileID
+      id
+    }
     }
   }`;
 
@@ -52,9 +50,11 @@ export async function getData(func, val) {
 // });
 
 // getData(
-//     getAccessibleFiles,
-//     "0xdd372842cb80c1892243d20ee4ad0979c293cad5"
-// ).catch((error) => {
-//     console.error(error);
-//     process.exitCode = 1;
+//   getAccessibleFiles,
+//   "0xdd372842cb80c1892243d20ee4ad0979c293cad5"
+// ).then((res) => {
+//   console.log(res.data.data);
+// }).catch((error) => {
+//   console.error(error);
+//   process.exitCode = 1;
 // });
