@@ -6,7 +6,7 @@
 <script>
     import Upload from "./Upload.svelte";
     import { rootFolder, signer } from "./stores.js";
-    import { mintFileToken, sendAccessPermission } from "./permissionNft.js";
+    import { getTokenId, mintFileToken, sendAccessPermission } from "./permissionNft.js";
 
     let dialog;
 
@@ -16,12 +16,14 @@
 
         // TODO: Update file list
 
-        await mintFileToken(cid);
+        await mintFileToken();
 
-        // TODO: Get ID of file
+        const fileId = `/${$rootFolder}/${fileName}`;
+        const tokenId = await getTokenId(fileId);
+        console.log('tokenid', tokenId.toNumber())
 
         // Allow uploader to download the file
-        await sendAccessPermission(await $signer.getAddress(), 0);  // ID
+        await sendAccessPermission(await $signer.getAddress(), tokenId);
     }
 
     async function handleUploadDialog() {

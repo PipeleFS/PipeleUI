@@ -61,6 +61,10 @@
         border-radius: 15px;
     }
 
+    #mainAction:disabled {
+        background: #b4afff;
+    }
+
     #mainAction img {
         width: 40px;
     }

@@ -26,7 +26,7 @@ This code is licensed under MIT license (see LICENSE for details)
 
     function handleCardClick(checkId) {
         const check = document.querySelector(checkId);
-        check.checked = !check.checked;
+        check.click();
     }
 
     async function handleDelete() {

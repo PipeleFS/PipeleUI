@@ -10,10 +10,15 @@ import { SHARE_NFT_ABI, SHARE_NFT_ADDRESS } from "./constants.js";
 import { get } from 'svelte/store';
 
 
-export async function mintFileToken(cid) {
+export async function mintFileToken() {
     const contract = new ethers.Contract(SHARE_NFT_ADDRESS, SHARE_NFT_ABI, get(signer));
-    const shareTx = await contract.mint(cid);
+    const shareTx = await contract.mint();
     await shareTx.wait();
+}
+
+export async function getTokenId(fileId) {
+    const contract = new ethers.Contract(SHARE_NFT_ADDRESS, SHARE_NFT_ABI, get(signer));
+    return await contract.getIdofCid(fileId)
 }
 
 export async function sendAccessPermission(recipientAddress, fileId) {
