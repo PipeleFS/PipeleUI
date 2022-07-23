@@ -10,8 +10,7 @@ export const SELECTION_TYPES = {
     received: 'received'
 }
 
-// export const SHARE_NFT_ADDRESS = '0xBB99FCaafCa56E36cBA706F70258bE6e453Fb028';  // previous contract
-export const SHARE_NFT_ADDRESS = '0x219a8393d8a04B59C701895DdcC94e852EBD964B';      // recent contract
+export const SHARE_NFT_ADDRESS = '0xCfb817ACDFc3F63ecc1e7746faE6697fCd6862d9';
 export const SHARE_NFT_ABI = [{
     "inputs": [{"internalType": "string", "name": "pipeleUri", "type": "string"}],
     "stateMutability": "nonpayable",
@@ -28,22 +27,17 @@ export const SHARE_NFT_ABI = [{
     "type": "event"
 }, {
     "anonymous": false,
-    "inputs": [{"indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256"}, {
-        "indexed": false,
-        "internalType": "string",
-        "name": "fileId",
-        "type": "string"
-    }],
-    "name": "AttachData",
-    "type": "event"
-}, {
-    "anonymous": false,
     "inputs": [{"indexed": false, "internalType": "address", "name": "to", "type": "address"}, {
         "indexed": false,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
-    }, {"indexed": false, "internalType": "uint256", "name": "ownershipType", "type": "uint256"}],
+    }, {"indexed": false, "internalType": "uint256", "name": "ownershipType", "type": "uint256"}, {
+        "indexed": false,
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+    }],
     "name": "Attest",
     "type": "event"
 }, {
@@ -97,12 +91,6 @@ export const SHARE_NFT_ABI = [{
     "name": "URI",
     "type": "event"
 }, {
-    "inputs": [{"internalType": "uint256", "name": "tokenId", "type": "uint256"}, {
-        "internalType": "string",
-        "name": "fileId",
-        "type": "string"
-    }], "name": "attachMetaData", "outputs": [], "stateMutability": "nonpayable", "type": "function"
-}, {
     "inputs": [{"internalType": "address", "name": "account", "type": "address"}, {
         "internalType": "uint256",
         "name": "id",
@@ -130,7 +118,7 @@ export const SHARE_NFT_ABI = [{
     "type": "function"
 }, {
     "inputs": [{"internalType": "string", "name": "fileId", "type": "string"}],
-    "name": "getIdofCid",
+    "name": "getIdofFileId",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
@@ -155,7 +143,7 @@ export const SHARE_NFT_ABI = [{
     "stateMutability": "view",
     "type": "function"
 }, {
-    "inputs": [],
+    "inputs": [{"internalType": "string", "name": "fileId", "type": "string"}],
     "name": "mint",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -214,7 +202,7 @@ export const SHARE_NFT_ABI = [{
     "type": "function"
 }, {
     "inputs": [],
-    "name": "tokenIssued",
+    "name": "tokensIssued",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"

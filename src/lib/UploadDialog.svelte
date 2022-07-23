@@ -11,14 +11,18 @@
     let dialog;
 
 
+    async function handleUloadStarted() {
+
+    }
+
     async function handleUploadComplete(url, fileName, fileType, cid) {
         console.log('complete', cid, url);
 
         // TODO: Update file list
 
-        await mintFileToken();
-
         const fileId = `/${$rootFolder}/${fileName}`;
+        await mintFileToken(fileId);
+
         const tokenId = await getTokenId(fileId);
         console.log('tokenid', tokenId.toNumber())
 
