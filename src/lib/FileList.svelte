@@ -24,6 +24,11 @@ This code is licensed under MIT license (see LICENSE for details)
         signerAddress = await $signer.getAddress();
     });
 
+    function handleCardClick(checkId) {
+        const check = document.querySelector(checkId);
+        check.checked = !check.checked;
+    }
+
     async function handleDelete() {
         await deleteFleekFile();
         listItems = listFleekFiles($rootFolder);
@@ -42,6 +47,44 @@ This code is licensed under MIT license (see LICENSE for details)
 
     #fileList li {
         text-align: center;
+    }
+
+    #actions {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+
+        margin-inline-start: 35px;
+        margin-block: 35px;
+    }
+
+    #title {
+        font-size: 36px;
+    }
+
+    #deleteAction {
+        width: 244px;
+        height: 77px;
+
+        color: #fff;
+        background: #6C63FF;
+
+        font-size: 36px;
+
+        border: 0;
+        border-radius: 15px;
+    }
+
+    #deleteAction:disabled {
+        background: #b4afff;
+    }
+
+    #deleteAction img {
+        width: 40px;
+    }
+
+    #loadState {
+        margin: 35px;
     }
 
     .card {
@@ -66,25 +109,30 @@ This code is licensed under MIT license (see LICENSE for details)
 
     .card .fileName {
         word-break: break-word;
+        pointer-events: none;
     }
 </style>
 
 
 <div>
-    <div>
+    <div id="actions">
+        <h2 id="title">Uploaded Files</h2>
         <UploadDialog/>
         <Share disabled="{hasSelection !== true}"/>
-        <button on:click={handleDelete} disabled="{hasSelection === false}">Delete</button>
+        <button id="deleteAction" on:click={handleDelete} disabled="{hasSelection === false}">
+            <img src="/delete-icon.svg" alt="" />
+            <span>Delete</span>
+        </button>
     </div>
 
     {#await listItems}
-        loading...
+        <span id="loadState">loading...</span>
     {:then list}
         <ul id="fileList">
             {#each list as item, index}
                 {#if (!item.key.endsWith('root.txt'))}
                         <li>
-                            <div class="card">
+                            <div class="card" on:click={() => handleCardClick(`#item-${index}`)}>
                                 <img class="fileIcon" src="/file-icon.svg" alt="file icon" />
                                 <label class="fileName" for="{`item-${index}`}">{item.key.split('/').at(-1)}</label>
                             </div>

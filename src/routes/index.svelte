@@ -215,7 +215,8 @@ This code is licensed under MIT license (see LICENSE for details)
         <svelte:component this="{selectedComponent}" />
     </section>
 
-    <div>
-        <button on:click={disconnect}>Disconnect</button>
-    </div>
+<!--    TOTO: Add back somewhere -->
+<!--    <div>-->
+<!--        <button on:click={disconnect}>Disconnect</button>-->
+<!--    </div>-->
 {/if}

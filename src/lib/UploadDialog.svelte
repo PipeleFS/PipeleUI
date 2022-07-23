@@ -47,6 +47,23 @@
         padding-inline: 25px;
     }
 
+    #mainAction {
+        width: 244px;
+        height: 77px;
+
+        color: #fff;
+        background: #6C63FF;
+
+        font-size: 36px;
+
+        border: 0;
+        border-radius: 15px;
+    }
+
+    #mainAction img {
+        width: 20px;
+    }
+
     #content {
         height: 450px;
         background: url("/uploadbg.svg") no-repeat center 20px;
@@ -72,7 +89,10 @@
 </style>
 
 
-<button on:click={handleUploadDialog}>Upload</button>
+<button id="mainAction" on:click={handleUploadDialog}>
+    <img src="/upload-icon.svg" alt="" />
+    <span>Upload</span>
+</button>
 
 <dialog bind:this={dialog}>
     <header>

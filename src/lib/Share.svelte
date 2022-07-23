@@ -48,13 +48,33 @@
 
 
 <style>
+    #mainAction {
+        width: 244px;
+        height: 77px;
+
+        color: #fff;
+        background: #6C63FF;
+
+        font-size: 36px;
+
+        border: 0;
+        border-radius: 15px;
+    }
+
+    #mainAction img {
+        width: 40px;
+    }
+
     .removeShare {
         width: 20px;
     }
 </style>
 
 
-<button disabled="{disabled}" on:click={showModal}>Share</button>
+<button id="mainAction" disabled="{disabled}" on:click={showModal}>
+    <img src="/share-icon.svg" alt="" />
+    <span>Share</span>
+</button>
 
 <dialog bind:this={dialog}>
     <p>Share file</p>
