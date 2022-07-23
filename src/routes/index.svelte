@@ -150,10 +150,14 @@ This code is licensed under MIT license (see LICENSE for details)
 
         padding-inline-start: 37px;
 
+        color: #464646;
         background-color: #E0E0E0;
+
+        text-decoration: none;
     }
 
     nav a.active {
+        color: #6C63FF;;
         background-color: #fff;
     }
 
@@ -211,7 +215,7 @@ This code is licensed under MIT license (see LICENSE for details)
         <svelte:component this="{selectedComponent}" />
     </section>
 
-<!--    TOTO: Add back somewhere -->
+<!--    TODO: Add back somewhere -->
 <!--    <div>-->
 <!--        <button on:click={disconnect}>Disconnect</button>-->
 <!--    </div>-->

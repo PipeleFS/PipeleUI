@@ -96,7 +96,7 @@
 
 
 <button id="mainAction" on:click={handleUploadDialog}>
-    <img src="/upload-icon.svg" alt="" />
+    <img src="/upload-btn.svg" alt="" />
     <span>Upload</span>
 </button>
 
