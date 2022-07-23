@@ -20,7 +20,6 @@ This code is licensed under MIT license (see LICENSE for details)
     import { USER_TABLE_NAME } from '$lib/constants';
     import { createFleekFolder } from '$lib/storage';
     import { rootFolder, signer } from "$lib/stores";
-    import { getAccessibleFiles, getData } from "$lib/queries";
 
 
     const providerOptions = {
@@ -52,9 +51,6 @@ This code is licensed under MIT license (see LICENSE for details)
         if (cachedProviderName) {
             await connect();
         }
-
-        const shares = await getData(getAccessibleFiles, '0xdD372842cB80c1892243D20eE4ad0979c293Cad5');
-        console.log('shares', shares.data.data);
     })
 
     async function connect() {

@@ -30,4 +30,32 @@ This code is licensed under MIT license (see LICENSE for details)
 </script>
 
 
-<button on:click={handleDownload} disabled="{disabled}">Download</button>
+<style>
+    #mainAction {
+        width: 244px;
+        height: 77px;
+
+        color: #fff;
+        background: #6C63FF;
+
+        font-size: 36px;
+
+        border: 0;
+        border-radius: 15px;
+    }
+
+    #mainAction:disabled {
+        background: #b4afff;
+    }
+
+    #mainAction img {
+        width: 30px;
+        color: white
+    }
+</style>
+
+
+<button id="mainAction" on:click={handleDownload} disabled="{disabled}">
+    <img src="/download-icon.svg" alt="" />
+    <span>Download</span>
+</button>
