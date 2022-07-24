@@ -27,10 +27,6 @@
         const check = document.querySelector(checkId);
         check.click();
     }
-
-    function handleDownload() {
-
-    }
 </script>
 
 
@@ -105,9 +101,9 @@
                     <li>
                         <div class="card" on:click={() => handleCardClick(`#item-${index}`)}>
                             <img class="fileIcon" src="/file-icon.svg" alt="file icon" />
-                            <label class="fileName" for="{`item-${index}`}">{item.key}</label>
+                            <label class="fileName" for="{`item-${index}`}">{item.pipeleSBT.fileID}</label>
                         </div>
-                        <input id={`item-${index}`} type="checkbox" bind:group={$selectedShares} value="{item.hash}"/>
+                        <input id={`item-${index}`} type="checkbox" bind:group={$selectedShares} value="{item.pipeleSBT.fileID}"/>
                     </li>
             {:else}
                 <li>No files received yet</li>

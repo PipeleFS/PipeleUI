@@ -27,7 +27,7 @@ const accessControlConditions = [{
 export async function encryptFile(file, tokenId) {
     let encryptedZip, symmetricKey;
 
-    accessControlConditions[0].parameters[0] = [
+    accessControlConditions[0].parameters = [
         ':userAddress',
         tokenId.toString()
     ]
