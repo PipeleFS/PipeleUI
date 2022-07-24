@@ -40,7 +40,37 @@
 
 
 <style>
-    #mainAction {
+    dialog {
+        width: 80vw;
+        height: 580px;
+
+        padding: 0;
+    }
+
+    dialog header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        height: 63px;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+        padding-inline: 25px;
+    }
+
+    form {
+        padding-inline: 25px;
+    }
+
+    #title {
+        font-size: 36px;
+    }
+
+    #dialogAction {
+        text-align: end;
+    }
+
+    #mainAction, #shareAction {
         width: 244px;
         height: 77px;
 
@@ -61,6 +91,39 @@
         width: 40px;
     }
 
+    #shareAction {
+        height: 59px;
+        font-size: 24px;
+    }
+
+    #recipientAddress {
+        display: flex;
+        align-items: center;
+
+        height: 60px;
+
+        margin-block: 40px;
+
+        background: #E8E8E8;
+        border-radius: 10px;
+    }
+
+    #recipientAddress img {
+        position: relative;
+        width: 40px;
+    }
+
+    #recipientAddress input {
+        flex-grow: 1;
+
+        height: 40px;
+
+        margin-inline-end: 10px;
+
+        background: #E8E8E8;
+        border: 0;
+    }
+
     .removeShare {
         width: 20px;
     }
@@ -73,30 +136,34 @@
 </button>
 
 <dialog bind:this={dialog}>
-    <p>Share file</p>
+    <header>
+        <p id="title">Share file</p>
+        <img class="icon" on:click={() => dialog.close()} src="/close.svg" alt="close dialog" />
+    </header>
     <form method="dialog">
-        <label>
-            <span>Recipient</span>
-            <input on:change={(event) => confirmShare.value = event.target.value} />
-        </label>
-        <div>
-            <label for="selected">Selected Files</label>
-            <ul id="selected">
-                {#each $selectedFiles as item}
-                    <li>
-                        <span>{item.key}</span>
-                        <img on:click={() => handleRemove(item)}
-                             class="removeShare"
-                             src="/delete-stop-svgrepo-com.svg"
-                             alt="remove file from list"/>
-                    </li>
-                {/each}
-            </ul>
+        <div id="recipientAddress">
+            <img src="/search.svg" alt="" />
+            <input on:change={(event) => confirmShare.value = event.target.value}
+                placeholder="Enter wallet address" />
         </div>
+<!--        <div>-->
+<!--            <label for="selected">Selected Files</label>-->
+<!--            <ul id="selected">-->
+<!--                {#each $selectedFiles as item}-->
+<!--                    <li>-->
+<!--                        <span>{item.key}</span>-->
+<!--                        <img on:click={() => handleRemove(item)}-->
+<!--                             class="removeShare"-->
+<!--                             src="/delete-stop-svgrepo-com.svg"-->
+<!--                             alt="remove file from list"/>-->
+<!--                    </li>-->
+<!--                {/each}-->
+<!--            </ul>-->
+<!--        </div>-->
 
-        <div>
-            <button value="cancel">cancel</button>
-            <button bind:this={confirmShare} value="default" disabled="{$selectedFiles.length === 0}">Send</button>
+        <div id="dialogAction">
+            <button id="shareAction" bind:this={confirmShare}
+                    value="default" disabled="{$selectedFiles.length === 0}">Share</button>
         </div>
     </form>
 </dialog>
