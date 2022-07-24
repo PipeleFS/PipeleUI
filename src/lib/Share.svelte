@@ -111,6 +111,8 @@
     #recipientAddress img {
         position: relative;
         width: 40px;
+
+        margin-inline-start: 40px;
     }
 
     #recipientAddress input {
