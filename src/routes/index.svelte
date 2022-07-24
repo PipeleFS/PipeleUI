@@ -12,8 +12,6 @@ This code is licensed under MIT license (see LICENSE for details)
     import Welcome from "../lib/Welcome.svelte";
 
     import { ethers } from "ethers";
-    import Web3Modal from "web3modal";
-    import WalletConnectProvider from "@walletconnect/web3-provider";
 
     import { connect as tlConnect } from '@tableland/sdk';
 
@@ -22,23 +20,7 @@ This code is licensed under MIT license (see LICENSE for details)
     import { rootFolder, signer } from "$lib/stores";
 
 
-    const providerOptions = {
-        walletconnect: {
-            package: WalletConnectProvider,
-            options: {
-                infuraId: import.meta.env.CLIENT_INFURA_ID
-            }
-        }
-    };
-
-    const web3Modal = new Web3Modal({
-        network: "testnet",
-        cacheProvider: true,
-        providerOptions
-    });
-
-
-    let instance, provider;
+    let provider;
     let isConnected = false;
     let activeContent = 'files';
     let selectedComponent = FileList;
@@ -54,8 +36,8 @@ This code is licensed under MIT license (see LICENSE for details)
     })
 
     async function connect() {
-        instance = await web3Modal.connect()
-        provider = new ethers.providers.Web3Provider(instance)
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
         $signer = provider.getSigner();
 
         isConnected = true;
@@ -78,11 +60,6 @@ This code is licensed under MIT license (see LICENSE for details)
             console.log('Error', error);
             isConnected = false;
         });
-    }
-
-    async function disconnect() {
-        await web3Modal.clearCachedProvider();
-        isConnected = false;
     }
 
     async function initApp() {
@@ -120,10 +97,10 @@ This code is licensed under MIT license (see LICENSE for details)
             const { columns, rows } = await tableland.read(`SELECT * FROM ${dataTable};`);
             console.log('table', columns, rows);
 
-            folderCid = rows[0][0];
+            // folderCid = rows[0][0];
 
-            // In case tableland is down
-            // folderCid = '0xdD372842cB80c1892243D20eE4ad0979c293Cad5';  // this is the wallet address
+            // In case tableland is down, or the write call doesn't work (which was a constant problem for us)
+            folderCid = '0xdD372842cB80c1892243D20eE4ad0979c293Cad5';
         }
 
         return folderCid;

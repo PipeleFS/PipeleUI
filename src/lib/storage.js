@@ -4,7 +4,6 @@
 */
 
 import { get } from 'svelte/store';
-import { Web3Storage } from 'web3.storage';
 import fleekStorage from '@fleekhq/fleek-storage-js';
 import { selectedFiles } from "./stores.js";
 
@@ -12,25 +11,6 @@ import { selectedFiles } from "./stores.js";
 const apiKey = import.meta.env.CLIENT_FLEEK_STORAGE_KEY;
 const apiSecret = import.meta.env.CLIENT_FLEEK_STORAGE_SECRET;
 
-
-export async function uploadWeb3Json(name, data) {
-    const client = new Web3Storage({token: import.meta.env.CLIENT_WEB3_STORAGE_KEY});
-
-    const blob = new Blob([data], {type: 'application/json'});
-    const files = [new File([blob], name)];
-    const cid = await client.put(files, { wrapWithDirectory: false});
-
-    console.log('stored files with cid:', cid);
-    return cid;
-}
-
-export async function uploadWeb3File(file, onStoredChunk) {
-    const client = new Web3Storage({token: import.meta.env.CLIENT_WEB3_STORAGE_KEY});
-    const cid = await client.put([file], { wrapWithDirectory: false, onStoredChunk});
-
-    console.log('stored files with cid:', file, cid);
-    return cid;
-}
 
 export async function uploadFleekText(fileName, data, mimeType) {
     const uploadedFile  = await fleekStorage.upload({
