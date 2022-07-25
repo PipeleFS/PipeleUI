@@ -1,38 +1,8 @@
-# create-svelte
+# Pipele
+Pipele is a "self-sovereign platform" that allows users to create private online spaces and share files securely.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Project Description
+Our project is to create a self-sovereign platform by allowing the creation of private online spaces and file share . The blockchain is public and can be accessed by anyone in the world. It is verifiable because anyone can access it, but putting personal data on the blockchain is giving up privacy. Pipele, which we created, can solve that problem. Pipele combines LitProtocol and decentralized storage to create and share private space. Users upload files/folders they wish to store in their private space and they are encrypted by Pipele and stored in storage. Next, the user selects the person with whom he/she wants to share and presses the share button. Next, a SBT (ERC1155 non-transferable token) is sent to the person with whom he/she wants to share. This SBT is proof of a decision to share. Pipele requires possession of an SBT (proof of decision to share) and grants decryption keys to those who meet the requirements. The person to whom the decryption key is assigned can then access the encrypted data. This mechanism allows for the creation and sharing of private online space.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte
-
-# create a new project in my-app
-npm init svelte my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## How it's Made
+Pipepe encrypts and decrypts files with LitProtocol, stores encrypted files in IPFS, proves shared will and maps shared partners with SBT (ERC1155),Fleek automatically updates CIDs and manages files, Tableland stores keys in user's root folder, the graph to query the data, and a number of protocols are combined to create a self-sovereign platform. When a user uploads a file, it is encrypted by Lit Protocol and stored in IPFS. The CID of the root folder changes because the files to be encrypted are stored in the root folder in IPFS. Therefore, Fleek connects the root folder and the CID of the uploaded file and updates the CID. In addition, the user's root folder key is stored in a table by tableland. The next step is to set up on-chain using the Lit Protocol. In Pipele, when the share button is pressed, an SBT is issued to the owner of the file and to the person with whom the file is shared. The SBT serves to connect the owner of the file with the person with whom the file is shared, and at the same time it is a condition for decryption. The graph also allows the user to manage the people with whom files are shared, making it possible to create a friends list. The above mechanism allows users to own their own data, to be able to choose who they share it with, and to manage who they share it with.
