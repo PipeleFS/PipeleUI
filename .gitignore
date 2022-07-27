@@ -10,3 +10,4 @@ node_modules
 .output
 .idea
 package-lock.json
+/.netlify

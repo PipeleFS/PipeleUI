@@ -21,7 +21,7 @@ This code is licensed under MIT license (see LICENSE for details)
 
             console.log('download', downloadResult);
 
-            const { decryptedFile, metadata } = await decrypt(downloadResult.data);
+            const { decryptedFile, metadata } = await decrypt(new File([downloadResult.data.data], downloadResult.fileName));
             console.log('decrypted', decryptedFile, metadata);
 
             await downloadBuffer(metadata.name, decryptedFile, metadata.type)

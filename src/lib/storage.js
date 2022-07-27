@@ -4,42 +4,45 @@
 */
 
 import { get } from 'svelte/store';
-import fleekStorage from '@fleekhq/fleek-storage-js';
 import { selectedFiles } from "./stores.js";
 
 
 const apiKey = import.meta.env.CLIENT_FLEEK_STORAGE_KEY;
-const apiSecret = import.meta.env.CLIENT_FLEEK_STORAGE_SECRET;
 
 
 export async function uploadFleekText(fileName, data, mimeType) {
-    const uploadedFile  = await fleekStorage.upload({
-        apiKey,
-        apiSecret,
-        key: fileName,
-        ContentType: mimeType,
-        data: data,
-        httpUploadProgressCallback: (event) => {
-            console.log(Math.round(event.loaded / event.total * 100) + '% done');
-        }
+    const response = await fetch('/api/fleek/file', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            apiKey,
+            key: fileName,
+            ContentType: mimeType,
+            data,
+        })
     });
 
-    return uploadedFile.hash;
+    return await response.json();
 }
 
 export async function uploadFleekFile(prefix, file) {
-    const uploadedFile  = await fleekStorage.upload({
-        apiKey,
-        apiSecret,
-        key: `/${prefix}/${file.name}`,
-        ContentType: file.type,
-        data: file,
-        httpUploadProgressCallback: (event) => {
-            console.log(Math.round(event.loaded / event.total * 100) + '% done');
-        }
+    const formData = new FormData();
+    formData.append('apiKey', apiKey);
+    formData.append('key', `/${prefix}/${file.name}`);
+    formData.append('file', file);
+    formData.append('fileType', file.type);
+
+    const response = await fetch('/api/fleek/file', {
+        method: 'POST',
+        body: formData
     });
 
-    return uploadedFile.hash;
+    const hash = await response.json();
+    console.log('upload', hash);
+
+    return hash;
 }
 
 /*
@@ -47,56 +50,44 @@ export async function uploadFleekFile(prefix, file) {
  */
 export async function createFleekFolder(path, fileName, data, mimeType) {
     const filePath = `${path}/${fileName}`;
-    return uploadFleekText(filePath, data, mimeType);
+    const response = await fetch('/api/fleek/folder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            apiKey,
+            key: filePath,
+            ContentType: mimeType,
+            data,
+        })
+    });
+
+    return uploadFleekText(await response.json(), data, mimeType);
 }
 
 export async function listFleekFiles(listPrefix) {
-    console.log('prefix', listPrefix);
-
-    if (listPrefix) {
-        return await fleekStorage.listFiles({
-            apiKey,
-            apiSecret,
-            prefix: listPrefix,
-            getOptions: [
-                'key',
-                'hash',
-                'publicUrl'
-            ],
-        });
-    } else {
-        return [];
-    }
+    const response = await fetch(`api/fleek/folder?apiKey=${apiKey}&prefix=${listPrefix}`)
+    return await response.json();
 }
 
 export async function downloadFleekFile(key) {
-    return await fleekStorage.get({
-        apiKey,
-        apiSecret,
-        key,
-        getOptions: [
-            'data',
-            'bucket',
-            'key',
-            'hash',
-            'publicUrl'
-        ],
-    })
+    const fileName = key.split('/').at(-1);
+    const response = await fetch(`api/fleek/file?apiKey=${apiKey}&key=${key}&fileName=${fileName}`);
+    return await response.json();
 }
 
 export async function deleteFleekFile() {
     console.log(get(selectedFiles));
 
     for (const item of get(selectedFiles)) {
-        await fleekStorage.deleteFile({
-            apiKey,
-            apiSecret,
-            key: item.key
+        await fetch(`api/fleek/file?apiKey=${apiKey}&key=${item.key}`, {
+            method: 'DELETE'
         });
-
-        // TODO: clear item from selectedFiles
-        // TODO: delete access NFT of item
-
-        console.log('cleared');
     }
+
+    // TODO: clear item from selectedFiles
+    // TODO: delete access NFT of item
+
+    console.log('cleared');
 }

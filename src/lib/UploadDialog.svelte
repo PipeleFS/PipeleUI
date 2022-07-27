@@ -4,11 +4,14 @@
 -->
 
 <script>
+    import { createEventDispatcher } from "svelte";
+
     import Upload from "./Upload.svelte";
     import { rootFolder, signer } from "./stores.js";
     import { getTokenId, mintFileToken, sendAccessPermission } from "./permissionNft.js";
 
     let dialog;
+    let dispatch = createEventDispatcher();
 
 
     async function handleUloadStarted(fileName) {
@@ -24,7 +27,7 @@
     async function handleUploadComplete(url, fileName, fileType, cid, setupValues) {
         console.log('complete', cid, url);
 
-        // TODO: Update file list
+        dispatch('uploadComplete');
 
         // Allow uploader to download the file
         await sendAccessPermission(await $signer.getAddress(), setupValues.tokenId);
