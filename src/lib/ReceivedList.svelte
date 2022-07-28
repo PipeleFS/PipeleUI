@@ -97,7 +97,7 @@
         <span id="loadState">...loading</span>
     {:then list}
         <ul id="receivedList">
-            {#each list.pipeleShares as item, index}
+            {#each list.data.data.pipeleShares as item, index}
                     <li>
                         <div class="card" on:click={() => handleCardClick(`#item-${index}`)}>
                             <img class="fileIcon" src="/file-icon.svg" alt="file icon" />

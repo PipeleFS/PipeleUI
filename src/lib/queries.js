@@ -1,9 +1,9 @@
 /* This file has been converted to mjs so that node understands new import statements
 if this code is being run in a browser, rename the files back to .js
 */
-import axios from 'axios';
+import axios from "axios";
 
-let URL = 'https://api.thegraph.com/subgraphs/name/darahask/pipe';
+let URL = "https://api.thegraph.com/subgraphs/name/darahask/pipe";
 
 export const getFriends = (addr) => `{
   pipeleUser(id: "${addr}") {
@@ -21,12 +21,12 @@ export const getAccessibleFiles = (addr) => `{
       fileID
       id
     }
-  }
+    }
   }`;
 
 export async function getData(func, val) {
-	let query = func(val);
-	return (await axios.post(URL, { query })).data.data;
+    let query = func(val);
+    return (await axios.post(URL, { query }));
 }
 
 /* uncomment to test */

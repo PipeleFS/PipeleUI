@@ -101,7 +101,7 @@ This code is licensed under MIT license (see LICENSE for details)
         <span id="loadState">loading...</span>
     {:then list}
         <ul id="friendsList">
-            {#each list.pipeleUser.friends as item, index}
+            {#each list.data.data.pipeleUser.friends as item, index}
                 <li>
                     <div class="card" on:click={() => handleCardClick(`#item-${index}`)}>
                         <img on:click={(event) => handleStaring(event, item)} class="star" src="/star.svg" alt="star icon" />
