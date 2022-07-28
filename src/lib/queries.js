@@ -1,18 +1,16 @@
 /* This file has been converted to mjs so that node understands new import statements
 if this code is being run in a browser, rename the files back to .js
 */
+import axios from 'axios';
 
-import axios from "axios";
-
-let URL = "https://api.thegraph.com/subgraphs/name/darahask/pipe";
+let URL = 'https://api.thegraph.com/subgraphs/name/darahask/pipe';
 
 export const getFriends = (addr) => `{
-  pipeleShares(
-    where: {from_contains_nocase: "${addr}", to_not_contains_nocase: "${addr}"}
-    ) {
-    id
-    to
+  pipeleUser(id: "${addr}") {
+    friends {
+      id
     }
+  }
   }`;
 
 export const getAccessibleFiles = (addr) => `{
@@ -23,12 +21,12 @@ export const getAccessibleFiles = (addr) => `{
       fileID
       id
     }
-    }
+  }
   }`;
 
 export async function getData(func, val) {
-    let query = func(val);
-    return await axios.post(URL, {query});
+	let query = func(val);
+	return (await axios.post(URL, { query })).data.data;
 }
 
 /* uncomment to test */
