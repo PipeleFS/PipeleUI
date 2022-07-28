@@ -19,7 +19,6 @@ export const getAccessibleFiles = (addr) => `{
   pipeleShares(
     where: {to_contains_nocase: "${addr}"}
   ) {
-    from
     pipeleSBT {
       fileID
       id

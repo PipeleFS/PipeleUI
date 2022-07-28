@@ -71,9 +71,20 @@ export async function listFleekFiles(listPrefix) {
     return await response.json();
 }
 
-export async function downloadFleekFile(key) {
+export async function downloadFile(key) {
+    const result = await downloadFleekFile(key, false);
+    const fileResult = await fetch(result.publicUrl);
+    const file = await fileResult.blob();
+
+    console.log('file', result, fileResult);
+
+
+    return file;
+}
+
+export async function downloadFleekFile(key, withData = true) {
     const fileName = key.split('/').at(-1);
-    const response = await fetch(`api/fleek/file?apiKey=${apiKey}&key=${key}&fileName=${fileName}`);
+    const response = await fetch(`api/fleek/file?apiKey=${apiKey}&key=${key}&fileName=${fileName}&withData=${withData}`);
     return await response.json();
 }
 

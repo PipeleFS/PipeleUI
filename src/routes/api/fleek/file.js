@@ -15,24 +15,31 @@ export async function GET({url}) {
     const key = url.searchParams.get('key');
     const fileName = url.searchParams.get('fileName');
 
+    const withData = url.searchParams.get('withData');
+
+    const getOptions = [
+        'key',
+        'hash',
+        'publicUrl'
+    ];
+
+    if (withData === 'true') {
+        getOptions.append('data');
+    }
+
     const response = await fleekStorage.get({
         apiKey,
         apiSecret,
         key,
-        getOptions: [
-            'data',
-            'bucket',
-            'key',
-            'hash',
-            'publicUrl'
-        ],
+        getOptions
     });
 
-    console.log(response.data)
+    console.log('get', response)
 
     return {
         body: {
-            data: response.data,
+            data: response.data?.toString('hex'),
+            publicUrl: response.publicUrl,
             fileName
         }
     }
@@ -41,15 +48,14 @@ export async function GET({url}) {
 export async function POST({request}) {
     const formData = await request.formData();
     const file = formData.get('file');
-
-    console.log('upload', Buffer.from(await file.arrayBuffer()));
+    const data = Buffer.from(await file.arrayBuffer())
 
     const uploadedFile = await fleekStorage.upload({
         apiKey: formData.get('apiKey'),
         apiSecret,
         key: formData.get('key'),
         ContentType: formData.get('type'),
-        data: Buffer.from(await file.arrayBuffer()),
+        data,
         httpUploadProgressCallback: (event) => {
             console.log(Math.round(event.loaded / event.total * 100) + '% done');
         }
