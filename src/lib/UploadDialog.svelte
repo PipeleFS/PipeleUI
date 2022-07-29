@@ -15,6 +15,9 @@
 
 
     async function handleUloadStarted(fileName) {
+        // TODO: Lit opens the wallet connect dialog behind this one. Find another way around it than closing this one
+        dialog.close();
+
         const fileId = `${$rootFolder}/${fileName}`;
         await mintFileToken(fileId);
 
