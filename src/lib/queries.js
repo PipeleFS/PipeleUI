@@ -2,36 +2,39 @@
 if this code is being run in a browser, rename the files back to .js
 */
 
-import axios from "axios";
+import axios from 'axios';
 
-let URL = "https://api.thegraph.com/subgraphs/name/darahask/pipe";
+let URL = 'https://api.thegraph.com/subgraphs/name/darahask/pipe';
 
-export const getFriends = (addr) => `{
-  pipeleUser(id: "${addr}") {
-    friends {
+export const getFriends = (addr) => {
+	return `{
+    pipeleUsers(
+      where: {id_contains_nocase: "${addr}"}
+    ) {
       id
-    }
-  }
-  }`;
-
-export const getAccessibleFiles = (addr) => `{
-  pipeleShares(
-    where: {to_contains_nocase: "${addr}"}
-  ) {
-    pipeleSBT {
-      fileID
-      id
-    }
+      friends {
+        id
+      }
     }
   }`;
+};
+
+export const getAccessibleFiles = (addr) => {
+	return `{
+    pipeleShares(
+      where: {to_contains_nocase: "${addr}"}
+    ) {
+      pipeleSBT {
+        fileID
+        id
+      }
+      }
+    }`;
+};
 
 export async function getData(func, val) {
-    const query = func(val);
-
-    const response = await axios.post(URL, { query });
-    console.log('data', response);
-
-    return response;
+	const query = func(val);
+	return await axios.post(URL, { query });
 }
 
 /* uncomment to test */
