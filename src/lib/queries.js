@@ -6,29 +6,39 @@ import axios from "axios";
 
 let URL = "https://api.thegraph.com/subgraphs/name/darahask/pipe";
 
-export const getFriends = (addr) => `{
-  pipeleShares(
-    where: {from_contains_nocase: "${addr}", to_not_contains_nocase: "${addr}"}
+export const getFriends = (addr) => {
+	return `{
+    pipeleUsers(
+      where: {id_contains_nocase: "${addr}"}
     ) {
-    id
-    to
-    }
-  }`;
-
-export const getAccessibleFiles = (addr) => `{
-  pipeleShares(
-    where: {to_contains_nocase: "${addr}"}
-  ) {
-    pipeleSBT {
-      fileID
       id
-    }
+      friends {
+        id
+      }
     }
   }`;
+};
+
+export const getAccessibleFiles = (addr) => {
+	return `{
+    pipeleShares(
+      where: {to_contains_nocase: "${addr}"}
+    ) {
+      pipeleSBT {
+        fileID
+        id
+      }
+      }
+    }`;
+};
 
 export async function getData(func, val) {
-    let query = func(val);
-    return await axios.post(URL, {query});
+  const query = func(val);
+
+  const response = await axios.post(URL, { query });
+  console.log('data', response);
+
+  return response;
 }
 
 /* uncomment to test */
