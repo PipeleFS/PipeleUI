@@ -2,9 +2,9 @@
 if this code is being run in a browser, rename the files back to .js
 */
 
-import axios from 'axios';
+import axios from "axios";
 
-let URL = 'https://api.thegraph.com/subgraphs/name/darahask/pipe';
+let URL = "https://api.thegraph.com/subgraphs/name/darahask/pipe";
 
 export const getFriends = (addr) => {
 	return `{
@@ -33,8 +33,12 @@ export const getAccessibleFiles = (addr) => {
 };
 
 export async function getData(func, val) {
-	const query = func(val);
-	return await axios.post(URL, { query });
+  const query = func(val);
+
+  const response = await axios.post(URL, { query });
+  console.log('data', response);
+
+  return response;
 }
 
 /* uncomment to test */
