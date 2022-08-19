@@ -46,15 +46,30 @@ export async function GET({url}) {
 }
 
 export async function POST({request}) {
-    const formData = await request.formData();
-    const file = formData.get('file');
-    const data = Buffer.from(await file.arrayBuffer())
+    let apiKey, key, contentType, data;
+
+    if(request.headers.get('content-type') === 'application/json') {
+        const body = await request.json();
+
+        apiKey = body.apiKey;
+        key = body.key;
+        contentType = body.ContentType;
+        data = body.data;
+    } else {
+        const formData = await request.formData();
+        const file = formData.get("file");
+
+        apiKey = formData.get('apiKey');
+        key = formData.get('key');
+        contentType = formData.get('type');
+        data = Buffer.from(await file.arrayBuffer());
+    }
 
     const uploadedFile = await fleekStorage.upload({
-        apiKey: formData.get('apiKey'),
+        apiKey: apiKey,
         apiSecret,
-        key: formData.get('key'),
-        ContentType: formData.get('type'),
+        key,
+        ContentType: contentType,
         data,
         httpUploadProgressCallback: (event) => {
             console.log(Math.round(event.loaded / event.total * 100) + '% done');

@@ -18,7 +18,7 @@ export async function uploadFleekText(fileName, data, mimeType) {
         },
         body: JSON.stringify({
             apiKey,
-            key: fileName,
+            key: fileName.hash,
             ContentType: mimeType,
             data,
         })
