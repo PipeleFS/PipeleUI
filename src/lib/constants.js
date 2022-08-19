@@ -3,7 +3,7 @@
     This code is licensed under MIT license (see LICENSE for details)\
 */
 
-export const USER_TABLE_NAME = 'pip_user';
+export const USER_TABLE_NAME = 'pipele_user_table';
 
 export const SELECTION_TYPES = {
     files: 'files',

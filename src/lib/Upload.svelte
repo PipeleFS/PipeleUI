@@ -72,12 +72,12 @@
             console.log(`Uploading... ${pct.toFixed(2)}% complete`);
         }
 
-        if (encrypt) {
+        if (encrypt === 'true') {
             file = await encryptFile(file, setupValues.tokenId);
         }
 
         const cid = await uploadFleekFile(rootFolder, file, onStoredChunk);
-        const url = `https://ipfs.io/ipfs/${cid}`;
+        const url = `https://ipfs.io/ipfs/${cid.hash}`;
 
         if (!showButton) {
             imageUrl = url;

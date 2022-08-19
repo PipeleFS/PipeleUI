@@ -18,6 +18,7 @@ This code is licensed under MIT license (see LICENSE for details)
     import { USER_TABLE_NAME } from '$lib/constants';
     import { createFleekFolder } from '$lib/storage';
     import { rootFolder, signer } from "$lib/stores";
+    import { v4 as uuidv4 } from "uuid";
 
 
     let provider;
@@ -80,6 +81,9 @@ This code is licensed under MIT license (see LICENSE for details)
         console.log('connect', tables, dataTable);
 
         if (dataTable === undefined) {
+            const { hash } = await createFleekFolder(`${await $signer.getAddress()}`, 'root.txt', uuidv4(), 'text/plain');
+            folderCid = hash;
+
             const { name } = await tableland.create(
                 `root_folder text`,
                 USER_TABLE_NAME
@@ -87,20 +91,19 @@ This code is licensed under MIT license (see LICENSE for details)
 
             dataTable = name;
 
-            folderCid = await createFleekFolder(`${await $signer.getAddress()}`, 'root.txt', 'empty', 'text/plain');
-
             const insertRes = await tableland.write(
-                `INSERT INTO ${dataTable} (root_folder) VALUES (${folderCid});`
+                `INSERT INTO ${dataTable} (root_folder) VALUES ('${folderCid}');`
             );
+
             console.log('new root', insertRes, folderCid);
         } else {
             const { columns, rows } = await tableland.read(`SELECT * FROM ${dataTable};`);
             console.log('table', columns, rows);
 
-            // folderCid = rows[0][0];
+            folderCid = rows[0][0];
 
             // In case tableland is down, or the write call doesn't work (which was a constant problem for us)
-            folderCid = '0xdD372842cB80c1892243D20eE4ad0979c293Cad5';
+            // folderCid = '0xdD372842cB80c1892243D20eE4ad0979c293Cad5';
         }
 
         return folderCid;

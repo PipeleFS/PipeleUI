@@ -117,7 +117,7 @@ This code is licensed under MIT license (see LICENSE for details)
 <div>
     <div id="actions">
         <h2 id="title">Uploaded Files</h2>
-        <UploadDialog/>
+        <UploadDialog on:uploadComplete={() => listItems = listFleekFiles($rootFolder)} />
         <Share />
         <button id="deleteAction" on:click={handleDelete} disabled="{hasSelection === false}">
             <img src="/delete-icon.svg" alt="" />

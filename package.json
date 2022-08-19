@@ -7,7 +7,6 @@
 		"build": "vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync",
 		"check": "svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
 		"test": "playwright test",
@@ -19,7 +18,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-netlify": "^1.0.0-next.70",
 		"@sveltejs/adapter-static": "^1.0.0-next.38",
-		"@sveltejs/kit": "next",
+		"@sveltejs/kit": "1.0.0-next.405",
 		"@types/cookie": "^0.5.1",
 		"eslint": "^8.20.0",
 		"eslint-config-prettier": "^8.5.0",
@@ -39,7 +38,8 @@
 		"cookie": "^0.5.0",
 		"ethers": "^5.6.9",
 		"graphql": "^16.5.0",
-		"lit-js-sdk": "^1.1.202",
-		"svelte-boring-avatars": "^1.2.2"
+		"lit-js-sdk": "https://github.com/michaelvogt/lit-js-sdk.git",
+		"svelte-boring-avatars": "^1.2.2",
+		"uuid": "^8.3.2"
 	}
 }

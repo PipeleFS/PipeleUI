@@ -29,8 +29,6 @@
     }
 
     function handleRemove(item) {
-        console.log($selectedFiles)
-
         const filtered = $selectedFiles.filter(share => share !== item);
         $selectedFiles = filtered
 

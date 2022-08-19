@@ -6,7 +6,7 @@ This code is licensed under MIT license (see LICENSE for details)
 <script>
     import { decrypt, downloadBuffer } from "./encrypt.js";
     import { selectedFiles, selectedShares } from "./stores.js";
-    import { downloadFleekFile } from "./storage.js";
+    import { downloadFile } from "./storage.js";
     import { SELECTION_TYPES } from "./constants.js";
 
     export let disabled;
@@ -17,11 +17,11 @@ This code is licensed under MIT license (see LICENSE for details)
         const selection = selectionType === SELECTION_TYPES.files ? $selectedFiles : $selectedShares;
 
         for (const key of selection) {
-            const downloadResult = await downloadFleekFile(key);
+            const downloadResult = await downloadFile(key);
 
             console.log('download', downloadResult);
 
-            const { decryptedFile, metadata } = await decrypt(downloadResult.data);
+            const { decryptedFile, metadata } = await decrypt(downloadResult);
             console.log('decrypted', decryptedFile, metadata);
 
             await downloadBuffer(metadata.name, decryptedFile, metadata.type)
